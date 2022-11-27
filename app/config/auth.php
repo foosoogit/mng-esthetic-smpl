@@ -40,6 +40,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admins' => [                //追記
+            'driver' => 'session',  //追記
+            'provider' => 'admins', //追記
+        ],
+        'staffs' => [                //追記
+            'driver' => 'session',  //追記
+            'provider' => 'staffs', //追記
+        ],
     ],
 
     /*
@@ -63,6 +71,15 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+        'admins' => [                            //追記
+            'driver' => 'eloquent',              //追記
+            'model' => App\Models\Admin::class,  //追記
+        ],
+
+        'staffs' => [                            //追記
+            'driver' => 'eloquent',              //追記
+            'model' => App\Models\Staff::class,  //追記
         ],
 
         // 'users' => [
@@ -89,6 +106,18 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'admins' => [
+            'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'staffs' => [
+            'provider' => 'staffs',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
