@@ -35,12 +35,8 @@ return new class extends Migration
 			$table->string('phone',20)->nullable();
             $table->foreignId('current_team_id')->nullable();
 			$table->text('profile_photo_path',50)->nullable();
-            $table->string('password');
-            $table->rememberToken();
 			$table->string('password')->nullable();
 			$table->rememberToken();
-			$table->foreignId('current_team_id')->nullable();
-			$table->text('profile_photo_path',50)->nullable();
         });
     }
 
