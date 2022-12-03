@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->softDeletes();
-			$table->string('serial_admin',6)->unique()->comment('管理者用シリアル');
+			$table->string('serial_staff',6)->unique()->comment('管理者用シリアル');
 			$table->string('email')->unique()->unique()->comment('メールアドレス');
 			$table->timestamp('email_verified_at')->nullable();
 			$table->string('phone',20)->nullable()->comment('電話番号');

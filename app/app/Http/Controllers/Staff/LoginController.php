@@ -32,7 +32,7 @@ class LoginController extends Controller
      * @var string
      */
     //protected $redirectTo = RouteServiceProvider::HOME;
-    protected $redirectTo = '/Staff/home';
+    protected $redirectTo = '/staff/home';
 
     /**
      * Create a new controller instance.
@@ -53,7 +53,7 @@ class LoginController extends Controller
     public function logout(Request $request)                //追記
     {                                                       //追記
         $this->performLogout($request);                     //追記
-        return redirect('astaff/login');                     //追記
+        return redirect('staff/login');                     //追記
     }
 
     protected function create(array $data)

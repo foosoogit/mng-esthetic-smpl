@@ -40,11 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'admins' => [                //追記
+        'admin' => [                //追記
             'driver' => 'session',  //追記
             'provider' => 'admins', //追記
         ],
-        'staffs' => [                //追記
+        'staff' => [                //追記
             'driver' => 'session',  //追記
             'provider' => 'staffs', //追記
         ],
