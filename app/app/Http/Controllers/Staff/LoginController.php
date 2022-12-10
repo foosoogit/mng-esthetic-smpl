@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use App\Models\Staff;  
+use App\Models\Staff; 
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -50,12 +51,88 @@ class LoginController extends Controller
         return Auth::guard('staff');            //追記
     }
 
+    /*
+    public function authenticate(Request $request)
+    {
+        $pas=Staff::where('email','=', 'oezbeauty.ts@gmail.com')->first('password');
+        
+
+        if (Hash::check('00000101', $pas)) {
+            print "パスワードが一致";
+        }else{
+            print "だめ2";
+        }
+
+        $credentials = $request->only(['email', 'password']);
+
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        
+        if (Auth::guard('staff')->attempt($credentials)) {
+        //if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            return redirect()->intended('dashboard');
+        }
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+        /*
+
+        print "Auth::attempt=".Auth::attempt($credentials)."<br>";
+        if (Auth::guard('staff')->attempt($credentials)){
+        //if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('dashboard');
+        }
+        */
+    //}
+
+    public function login(Request $request) {
+        print 'LoginController<br>';
+        $credentials = $request->only(['email', 'password']);
+        //$guard = $request->guard;
+        $guard = 'staff';
+        print "attempt=".Auth::guard($guard)->attempt($credentials)."<br>";
+        //if(Auth::guard($guard)->attempt($credentials)) {
+        if(Auth::guard('staff')->attempt($credentials)) {
+            
+            //print '認証に成功しました<br>';
+            //return redirect($guard .'/home'); // ログインしたらリダイレクト
+            //return redirect($redirectTo);
+            return redirect('staff/home');
+        }        
+        return back()->withErrors([
+            'auth' => ['認証に失敗しました']
+        ]);
+    }
+
+    /*
+    public function login(Request $request)
+    {
+        $credentials = $request->only(['email', 'password']);
+
+        if (Auth::guard('staff')->attempt($credentials)) {
+            print "ログインしたら管理画面トップにリダイレクト";
+            return redirect()->route('admin.index')->with([
+                'login_msg' => 'ログインしました。',
+            ]);
+        }
+
+        return back()->withErrors([
+            'login' => ['ログインに失敗しました'],
+        ]);
+    }
+    */
     public function logout(Request $request)                //追記
     {                                                       //追記
         $this->performLogout($request);                     //追記
         return redirect('staff/login');                     //追記
     }
-
+    /*
     protected function create(array $data)
     {
         return Staff::create([                  //修正
@@ -63,4 +140,5 @@ class LoginController extends Controller
             'password' => Hash::make($data['password']),
         ]);
     }
+    */
 }

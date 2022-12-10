@@ -22,7 +22,7 @@ return new class extends Migration
 			$table->timestamp('email_verified_at')->nullable();
 			$table->string('phone',20)->nullable()->comment('電話番号');
 			$table->string('email_tmp')->nullable()->comment('メールアドレスの退避');
-			$table->string('password')->nullable()->comment('パスワード');
+			$table->string('password')->comment('パスワード');
 			$table->string('verify_code',10)->nullable()->comment('二要素認証用コード');
 			$table->string('verify_date',10)->default('false')->comment('認証チェック');
 			$table->rememberToken()->comment('ログイン省略トークン');
