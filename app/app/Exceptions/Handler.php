@@ -57,6 +57,7 @@ class Handler extends ExceptionHandler
             return redirect()->guest('/admin/login');//追記
         }
         if($request->is('staff') || $request->is('staff/*')){ //追記
+            //print "redirect()->guest<br>";
             return redirect()->guest('/staff/login');//追記
         }
         return redirect()->guest($exception->redirectTo ?? route('login'));

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Staff; 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\StaffController;
 
 class RedirectIfAuthenticated
 {
@@ -27,22 +28,23 @@ class RedirectIfAuthenticated
         //$pas=DB::table('staffs')->where('email','=','moezbeauty.ts@gmail.com')->get();
         //$pas=DB::table('staffs')->get('email');
         //$pas=Staff::where('email','=', 'moezbeauty.ts@gmail.com')->first();
-        $pas=DB::table('staffs')->where('email','=','moezbeauty.ts@gmail.com')->first();
-        print 'RedirectIfAuthenticated<br>';
+        //$pas=DB::table('staffs')->where('email','=','moezbeauty.ts@gmail.com')->first();
+        //print 'RedirectIfAuthenticated<br>';
         //print "pas=".$pas['password']."<br>";
+
+        //print "Auth::check0=".Auth::guard('staff')->check()."<br>";
         /*
-        print "pas=".$pas->password."<br>";
-        if (Hash::check('00000101', $pas->password)) {
-            print "パスワードが一致";
-        }else{
-            print "だめ";
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                return redirect(RouteServiceProvider::HOME);
+            }
         }
         */
-        print "Auth::check0=".Auth::guard('staff')->check()."<br>";
-        
+        //print_r($guards);
+        //print "Auth::check100=".Auth::guard('staff')->check()."<br>";
         foreach ($guards as $guard) {
-            print "guard=".$guard."<br>";
-            print "Auth::check1=".Auth::guard($guard)->check()."<br>";
+            //print "guard=".$guard."<br>";
+           
             if($guard == "admin" && Auth::guard($guard)->check()) {   //追記
                 print "admin<br>";
                 return redirect('admin/home');                        //追記
@@ -50,11 +52,12 @@ class RedirectIfAuthenticated
             //if($guard == "staff" && Auth::guard($guard)->check()) {   //追記
             if($guard == "staff" && Auth::guard('staff')->check()) {   //追記
                 print "staff true<br>";
-                //return redirect('staff/home');                        //追記
+                //return redirect('/MenuStaff');
+                return redirect('staff.menu');                        //追記
             } 
             if (Auth::guard($guard)->check()) {
                 print "guard100<br>";
-                return redirect(RouteServiceProvider::HOME);
+                //return redirect(RouteServiceProvider::HOME);
             }
         }
 

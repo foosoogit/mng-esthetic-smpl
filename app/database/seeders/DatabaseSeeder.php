@@ -4,6 +4,11 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,31 +19,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-        /*
-        $init_staffs = [
+		$init_users = [
 			[
-			'serial_staff'=> 'S_0001',
-			'email' => 'moezbeauty.ts@gmail.com',
-			'password' => '0101',
-			'last_name_kanji' => '鈴木',
-			'first_name_kanji' => '和弘',
-			'last_name_jp_kana' => 'スズキ',
-			'first_name_jp_kana' => 'カズヒロ',
-			'last_name_eng'=> 'Suzuki',
-			'first_name_eng'=> 'Kazuhiro',
-			'phone'=> '000-0000-0000',
-			'address'=> '東京都世田谷区************',
+			'serial_user'=> "S_0001",
+			'email' => "moezbeauty.ts@gmail.com",
+			'password' => "0101",
+			'last_name_kanji' => "鈴木",
+			'first_name_kanji' => "和弘",
+			'last_name_jp_kana' => "スズキ",
+			'first_name_jp_kana' => "カズヒロ",
+			'last_name_eng'=> "Suzuki",
+			'first_name_eng'=> "Kazuhiro",
+			'phone'=> "000-0000-0000",
+			'address'=> "東京都世田谷区************",
             ],
             [
-			'serial_staff'=> 'S_0002',
+			'serial_user'=> 'S_0002',
             'email' => 'awa@szemi-gp.com',
-			'password' => '000000',
+			'password' => '0102',
 			'last_name_kanji' => '鈴木',
 			'first_name_kanji' => '文彦',
 			'last_name_jp_kana' => 'スズキ',
@@ -50,21 +48,20 @@ class DatabaseSeeder extends Seeder
 			]
         ];
 
-        foreach($init_staffs as $init_staff) {
-			$staff = new StaffSeeder();
-			$staff->serial_staff=$init_staff['serial_staff'];
-			$staff->last_name_kanji = $init_staff['last_name_kanji'];
-			$staff->first_name_kanji = $init_staff['first_name_kanji'];
-			$staff->last_name_jp_kana = $init_staff['last_name_jp_kana'];
-			$staff->first_name_jp_kana = $init_staff['first_name_jp_kana'];
-			$staff->last_name_eng = $init_staff['last_name_eng'];
-			$staff->first_name_eng = $init_staff['first_name_eng'];
-			$staff->email = $init_staff['email'];
-			$staff->phone = $init_staff['phone'];
-			$staff->address = $init_staff['address'];
-			$staff->password = Hash::make($init_staff['password']);
-			$staff->save();
+		foreach($init_users as $init_user) {
+			$user = new User();
+			$user->serial_user=$init_user['serial_user'];
+			$user->last_name_kanji = $init_user['last_name_kanji'];
+			$user->first_name_kanji = $init_user['first_name_kanji'];
+			$user->last_name_jp_kana = $init_user['last_name_jp_kana'];
+			$user->first_name_jp_kana = $init_user['first_name_jp_kana'];
+			$user->last_name_eng = $init_user['last_name_eng'];
+			$user->first_name_eng = $init_user['first_name_eng'];
+			$user->email = $init_user['email'];
+			$user->phone = $init_user['phone'];
+			$user->address = $init_user['address'];
+			$user->password = Hash::make($init_user['password']);
+			$user->save();
 		}
-        */
     }
 }

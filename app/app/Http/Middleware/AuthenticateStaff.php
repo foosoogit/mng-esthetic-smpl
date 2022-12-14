@@ -8,7 +8,7 @@ use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class Authenticate extends Middleware
+class AuthenticateStaff extends Middleware
 {
     /**
      * Get the path the user should be redirected to when they are not authenticated.
@@ -24,9 +24,9 @@ class Authenticate extends Middleware
         //print "Auth::check=".Auth::check()."<br>";
         //print "attempt Authenticate=".Auth::guard('staff')->attempt($credentials)."<br>";
         if (! $request->expectsJson()) {
-            print "no<br>";
+           //print "no<br>";
             //return route('login');
-            //return route('/staff/home');
+            return route('/staff/login');
         }
     }
 }

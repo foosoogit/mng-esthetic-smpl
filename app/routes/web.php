@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use App\Http\Controllers\StaffController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +28,11 @@ Route::post('/staff/login', [App\Http\Controllers\Staff\LoginController::class,'
 Route::post('staff/logout', [App\Http\Controllers\Staff\LoginController::class,'logout']);
 Route::view('/staff/register', 'staff/register');
 Route::post('/staff/register', [App\Http\Controllers\Staff\RegisterController::class, 'register']);
+//Route::get('/staff/home', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement']);
+//Route::prefix('staff')->group(['middleware' => 'auth:staff'], function(){
+//Route::prefix('staff')->group(['middleware' => ['auth:staff'], function(){
 Route::group(['middleware' => ['auth:staff']], function(){
-    view('/staff/home', ['staff.home']);
+    Route::get('/staff/menu', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement'])->name('staff.menu');
 });
 //Route::view('/staff/home', 'staff/home')->middleware('auth:staff');
+//->middleware(['auth:teacher'])->name('password.email');

@@ -33,7 +33,8 @@ class LoginController extends Controller
      * @var string
      */
     //protected $redirectTo = RouteServiceProvider::HOME;
-    protected $redirectTo = '/staff/home';
+    //protected $redirectTo = '/staff/home';
+    protected $redirectTo = 'staff.home';
 
     /**
      * Create a new controller instance.
@@ -90,7 +91,7 @@ class LoginController extends Controller
         }
         */
     //}
-
+    /*
     public function login(Request $request) {
         print 'LoginController<br>';
         $credentials = $request->only(['email', 'password']);
@@ -98,18 +99,24 @@ class LoginController extends Controller
         $guard = 'staff';
         print "attempt=".Auth::guard($guard)->attempt($credentials)."<br>";
         //if(Auth::guard($guard)->attempt($credentials)) {
-        if(Auth::guard('staff')->attempt($credentials)) {
-            
-            //print '認証に成功しました<br>';
+        if(Auth::guard('staff')->attempt($credentials)==true) {
+            print "Auth::check2=".Auth::guard('staff')->check()."<br>";
+            print '認証に成功しました<br>';
             //return redirect($guard .'/home'); // ログインしたらリダイレクト
             //return redirect($redirectTo);
-            return redirect('staff/home');
+            $request->session()->regenerate();
+            
+            redirect()->route('view.staff.home');
+            //redirect()->route('staff.home');
+            //return redirect('/staff/home')->with([
+
+            //return redirect('/MenuStaff');
         }        
         return back()->withErrors([
             'auth' => ['認証に失敗しました']
         ]);
     }
-
+    */
     /*
     public function login(Request $request)
     {
