@@ -24,40 +24,27 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next, ...$guards)
     {
         $guards = empty($guards) ? [null] : $guards;
-        //$pas=Staff::where('email','=', 'oezbeauty.ts@gmail.com')->first('password');
-        //$pas=DB::table('staffs')->where('email','=','moezbeauty.ts@gmail.com')->get();
-        //$pas=DB::table('staffs')->get('email');
-        //$pas=Staff::where('email','=', 'moezbeauty.ts@gmail.com')->first();
-        //$pas=DB::table('staffs')->where('email','=','moezbeauty.ts@gmail.com')->first();
-        //print 'RedirectIfAuthenticated<br>';
-        //print "pas=".$pas['password']."<br>";
 
-        //print "Auth::check0=".Auth::guard('staff')->check()."<br>";
-        /*
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
-            }
-        }
-        */
-        //print_r($guards);
-        //print "Auth::check100=".Auth::guard('staff')->check()."<br>";
         foreach ($guards as $guard) {
             //print "guard=".$guard."<br>";
            
             if($guard == "admin" && Auth::guard($guard)->check()) {   //追記
-                print "admin<br>";
+                //print "admin<br>";
                 return redirect('admin/home');                        //追記
             }
-            //if($guard == "staff" && Auth::guard($guard)->check()) {   //追記
-            if($guard == "staff" && Auth::guard('staff')->check()) {   //追記
-                print "staff true<br>";
-                //return redirect('/MenuStaff');
-                return redirect('staff.menu');                        //追記
+
+            if($guard == "staff" && Auth::guard($guard)->check()) {   //追記
+                //print "ログイン成功10<br>";
+                $request->session()->regenerate();
+                //return redirect()->intended('dashboard');
+                //return redirect('staff.menu');
+                //return redirect('staff.menu');
+                return redirect('/menuStaff');
+                //return redirect('/menu');                        //追記
             } 
             if (Auth::guard($guard)->check()) {
-                print "guard100<br>";
-                //return redirect(RouteServiceProvider::HOME);
+                //print "guard100<br>";
+                return redirect(RouteServiceProvider::HOME);
             }
         }
 

@@ -19,13 +19,13 @@ class Authenticate extends Middleware
     
     protected function redirectTo($request)
     {
-        print "Auth::check=".Auth::guard('staff')->check()."<br>";
-        print "request->expectsJson=".$request->expectsJson()."<br>";
+        //print "Auth::check=".Auth::guard('staff')->check()."<br>";
+        //print "request->expectsJson=".$request->expectsJson()."<br>";
         //print "Auth::check=".Auth::check()."<br>";
         //print "attempt Authenticate=".Auth::guard('staff')->attempt($credentials)."<br>";
         if (! $request->expectsJson()) {
-            print "no<br>";
-            //return route('login');
+            //print "no<br>";
+            return route('login');
             //return route('/staff/home');
         }
     }

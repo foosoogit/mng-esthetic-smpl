@@ -31,8 +31,9 @@ Route::post('/staff/register', [App\Http\Controllers\Staff\RegisterController::c
 //Route::get('/staff/home', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement']);
 //Route::prefix('staff')->group(['middleware' => 'auth:staff'], function(){
 //Route::prefix('staff')->group(['middleware' => ['auth:staff'], function(){
+//Route::get('/menuStaff', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement'])->name('StaffMenu');
 Route::group(['middleware' => ['auth:staff']], function(){
-    Route::get('/staff/menu', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement'])->name('staff.menu');
+    Route::get('/menuStaff', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement'])->name('staff.menu');
 });
 //Route::view('/staff/home', 'staff/home')->middleware('auth:staff');
 //->middleware(['auth:teacher'])->name('password.email');

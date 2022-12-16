@@ -34,7 +34,7 @@ class LoginController extends Controller
      */
     //protected $redirectTo = RouteServiceProvider::HOME;
     //protected $redirectTo = '/staff/home';
-    protected $redirectTo = 'staff.home';
+    //protected $redirectTo = 'staff.home';
 
     /**
      * Create a new controller instance.
@@ -49,7 +49,8 @@ class LoginController extends Controller
 
     protected function guard()                  //追記
     {                                           //追記
-        return Auth::guard('staff');            //追記
+        return Auth::guard('staff');
+        //Auth::guard($guard)    //追記
     }
 
     /*
@@ -91,7 +92,28 @@ class LoginController extends Controller
         }
         */
     //}
+
+    public function authenticate(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+        
+        //if (Auth::attempt($credentials)) {
+        if (Auth::guard('staff')->attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('dashboard');
+            //redirect()->route('staff.menu');
+            //return redirect()->intended('dashboard');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
     /*
+
     public function login(Request $request) {
         print 'LoginController<br>';
         $credentials = $request->only(['email', 'password']);
@@ -101,12 +123,12 @@ class LoginController extends Controller
         //if(Auth::guard($guard)->attempt($credentials)) {
         if(Auth::guard('staff')->attempt($credentials)==true) {
             print "Auth::check2=".Auth::guard('staff')->check()."<br>";
-            print '認証に成功しました<br>';
+            print '認証に成功しました2<br>';
             //return redirect($guard .'/home'); // ログインしたらリダイレクト
             //return redirect($redirectTo);
-            $request->session()->regenerate();
-            
-            redirect()->route('view.staff.home');
+            //$request->session()->regenerate();
+            redirect()->route('staff.menu');
+            //redirect()->route('view.staff.home');
             //redirect()->route('staff.home');
             //return redirect('/staff/home')->with([
 
@@ -117,6 +139,7 @@ class LoginController extends Controller
         ]);
     }
     */
+
     /*
     public function login(Request $request)
     {
