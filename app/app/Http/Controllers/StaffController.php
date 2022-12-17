@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
+use App\Http\Controllers\OtherFunc;
 
 class StaffController extends Controller
 {
@@ -15,15 +16,16 @@ class StaffController extends Controller
 	}
 	
 	public function ShowMenuCustomerManagement(){
-		print "ShowMenuCustomerManagement<br>";
-        session(['fromPage' => 'MenuCustomerManagement']);
+		//print "ShowMenuCustomerManagement<br>";
+        //$OF = new OtherFunc;
+		session(['fromPage' => 'MenuCustomerManagement']);
 		session(['fromMenu' => 'MenuCustomerManagement']);
 		$header="";$slot="";
 		session(['fromMenu' => 'MenuCustomerManagement']);
 		session(['targetYear' => date('Y')]);
 		$targetYear=session('targetYear');
-		//OtherFunc::set_access_history('');
 		if(isset($_SERVER['HTTP_REFERER'])){
+			//$OF->et_access_history($_SERVER['HTTP_REFERER']);
 			OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
 		}
 
