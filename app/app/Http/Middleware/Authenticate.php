@@ -25,8 +25,8 @@ class Authenticate extends Middleware
         //print "attempt Authenticate=".Auth::guard('staff')->attempt($credentials)."<br>";
         if (! $request->expectsJson()) {
             //print "no<br>";
-            return route('login');
-            //return route('/staff/home');
+            //return route('login');
+            return route('staff.menu');
         }
     }
 }

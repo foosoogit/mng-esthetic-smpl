@@ -35,5 +35,3 @@ Route::post('/staff/register', [App\Http\Controllers\Staff\RegisterController::c
 Route::group(['middleware' => ['auth:staff']], function(){
     Route::get('/menuStaff', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement'])->name('staff.menu');
 });
-//Route::view('/staff/home', 'staff/home')->middleware('auth:staff');
-//->middleware(['auth:teacher'])->name('password.email');

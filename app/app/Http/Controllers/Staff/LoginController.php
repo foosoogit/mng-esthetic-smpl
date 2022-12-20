@@ -53,46 +53,6 @@ class LoginController extends Controller
         //Auth::guard($guard)    //追記
     }
 
-    /*
-    public function authenticate(Request $request)
-    {
-        $pas=Staff::where('email','=', 'oezbeauty.ts@gmail.com')->first('password');
-        
-
-        if (Hash::check('00000101', $pas)) {
-            print "パスワードが一致";
-        }else{
-            print "だめ2";
-        }
-
-        $credentials = $request->only(['email', 'password']);
-
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        
-        if (Auth::guard('staff')->attempt($credentials)) {
-        //if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return redirect()->intended('dashboard');
-        }
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
-        /*
-
-        print "Auth::attempt=".Auth::attempt($credentials)."<br>";
-        if (Auth::guard('staff')->attempt($credentials)){
-        //if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('dashboard');
-        }
-        */
-    //}
-
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
@@ -100,11 +60,10 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
         
-        //if (Auth::attempt($credentials)) {
         if (Auth::guard('staff')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('dashboard');
-            //redirect()->route('staff.menu');
+            //return redirect()->intended('dashboard');
+            redirect()->route('staff.menu');
             //return redirect()->intended('dashboard');
         }
 

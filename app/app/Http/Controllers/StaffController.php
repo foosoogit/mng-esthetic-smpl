@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use App\Http\Controllers\OtherFunc;
+use App\Models\PaymentHistory;
+use App\Models\Contract;
 
 class StaffController extends Controller
 {
@@ -32,7 +34,7 @@ class StaffController extends Controller
 		$DefaultUsersInf=PaymentHistory::leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')
 			->where('payment_histories.how_to_pay','=', 'default')
 			->whereIn('users.serial_user', function ($query) {
-				$query->select('keiyakus.serial_user')->from('keiyakus')->where('keiyakus.cancel','=', null);
+				$query->select('contracts.serial_user')->from('contracts')->where('contracts.cancel','=', null);
 			})
 			->distinct()->select('name_sei','name_mei')->get();
 		$html_year_slct=OtherFunc::make_html_year_slct(date('Y'));
