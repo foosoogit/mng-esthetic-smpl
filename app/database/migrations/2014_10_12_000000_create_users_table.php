@@ -36,7 +36,7 @@ return new class extends Migration
 			$table->string('phone',20)->nullable();
 			$table->text('profile_photo_path',50)->nullable();
             $table->text('address')->nullable()->comment('住所');
-			$table->integer('password')->nullable();
+			$table->string('password')->nullable();
             $table->string('reason_coming',200)->nullable();
             $table->string('zankin',10)->nullable()->comment('支払い残金');
 			$table->rememberToken();

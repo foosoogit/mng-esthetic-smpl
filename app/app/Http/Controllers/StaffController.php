@@ -9,6 +9,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Http\Controllers\OtherFunc;
 use App\Models\PaymentHistory;
 use App\Models\Contract;
+use App\Http\Controllers\InitConsts;
 
 class StaffController extends Controller
 {
@@ -45,7 +46,7 @@ class StaffController extends Controller
 		//list($targetNameHtmFront, $targetNameHtmBack) =OtherFunc::make_htm_get_not_coming_customer();
 		$csrf="csrf";
 		session(['GoBackPlace' => '../ShowMenuCustomerManagement']);
-		return view('teacher.MenuCustomerManagement',compact("header","slot","html_year_slct","html_month_slct","DefaultUsersInf","not_coming_customers","default_customers",'htm_kesanMonth'));
+		return view('staff.MenuCustomerManagement',compact("header","slot","html_year_slct","html_month_slct","DefaultUsersInf","not_coming_customers","default_customers",'htm_kesanMonth'));
 	}
 
 }

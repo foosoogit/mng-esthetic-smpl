@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('subject',50)->comment('項目 ID');
             $table->string('value1',50)->comment('Value-1');
-            $table->text('value2')->comment('Value-2');
+            $table->text('value2')->nullable()->comment('Value-2');
             $table->text('setumei')->comment('説明');
         });
     }
