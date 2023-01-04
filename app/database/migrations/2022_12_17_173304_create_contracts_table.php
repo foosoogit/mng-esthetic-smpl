@@ -20,7 +20,7 @@ return new class extends Migration
 			
 			$table->string('serial_keiyaku', 50)->unique()->comment('契約シリアル-自動');
 			$table->string('serial_user',20)->nullable()->comment('serial_user');
-			$table->string('serial_staff,20')->nullable()->comment('ID Staff');
+			$table->string('serial_staff',20)->nullable()->comment('ID Staff');
 			
 			$table->string('course')->nullable()->comment('コース');
 			$table->string('treatments_num')->nullable()->comment('施術シリアル');

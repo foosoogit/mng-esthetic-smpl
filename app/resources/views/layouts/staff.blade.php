@@ -12,9 +12,10 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <!-- Styles -->
+    @livewireStyles
 </head>
 <body>
     <div id="app">
@@ -55,7 +56,7 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('staff/logout') }}"
+                                    <a class="dropdown-item" href="{{ route('staff.logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
@@ -73,8 +74,10 @@
         </nav>
 
         <main class="py-4">
+            {{--@livewire('customer-search')--}}
             @yield('content')
         </main>
     </div>
+    @livewireScripts
 </body>
 </html>

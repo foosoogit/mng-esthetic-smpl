@@ -14,14 +14,21 @@
                         @endif
                         <ul>
                     	@canany('viewAny', Auth::guard('staff')->user())
-                                <li><a href="/users">社員一覧
-                                    </a></li>
+                            <li><a href="/users">社員一覧</a></li>
 						@endcanany
-                            <li><p>
-				<form method="GET" action="/customers/ShowCustomersList_livewire">@csrf
-					<button class="bg-blue-500 text-black rounded px-3 py-1" type="submit" >顧客一覧</button>&nbsp;修正・新規登録・契約
-				</form>
-					支払い不履行者<br>
+                        <li><p>
+						<form method="GET" action="/customers/ShowCustomersList_livewire">@csrf
+							<button class="bg-blue-500 text-black rounded px-3 py-1" type="submit" >顧客一覧</button>&nbsp;修正・新規登録・契約
+						</form>
+						{{--
+							<form method="GET" action="/ShowUserList">@csrf
+							<button class="bg-blue-500 text-black rounded px-3 py-1" type="submit" >顧客一覧Test</button>&nbsp;修正・新規登録・契約
+						</form>
+						<form method="GET" action="/customers/livewire_test">@csrf
+							<button class="bg-blue-500 text-black rounded px-3 py-1" type="submit" >livewire Test</button>&nbsp;修正・新規登録・契約
+						</form>
+						--}}
+						支払い不履行者<br>
 					<span style="color:red;">
 					<form method="POST" action="/customers/ShowCustomersList_livewire_from_top_menu">@csrf
 						{!!$default_customers!!}
