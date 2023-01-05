@@ -34,7 +34,7 @@
 				<div>
 					
 					@unless($UserSerial==="all")
-						顧客番号：　{{$UserSerial}}　　契約者：{{optional($userinf)->name_sei}}  &nbsp; {{optional($userinf)->name_mei}}
+						顧客番号：　{{$UserSerial}}    契約者：{{optional($userinf)->name_sei}}  &nbsp; {{optional($userinf)->name_mei}}
 					@endunless					
 					
 					<table class="table-auto" border-solid>

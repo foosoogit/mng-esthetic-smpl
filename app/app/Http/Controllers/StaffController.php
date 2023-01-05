@@ -24,6 +24,8 @@ class StaffController extends Controller
 	}
 
 	public function ShowContractList($UserSerial,Request $request){
+		$UserSerial=sprintf('%06d', trim($UserSerial));
+		
 		session(['fromPage' => 'ContractList']);
 		session(['targetUserSerial' => $UserSerial]);
 		if(isset($request->page_num)){
@@ -32,21 +34,31 @@ class StaffController extends Controller
 		//print 'page_num='.$request->page_num;
 		$header="";$slot="";
 		$key="";
-		$Contracts="";
+		$ContractsRes="";
 		if(Auth::user()->serial_staff=="S_0001"){
+			//$UserSerial="all";
 			if($UserSerial=="all"){
 				$userinf="";
-				$Contracts=Keiyaku::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->paginate(initConsts::DdisplayLineNumContractList());
+				$ContractsRes=Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->paginate(initConsts::DdisplayLineNumContractList());
+				//Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->dd();
 				$GoBackPlace="/ShowMenuCustomerManagement/";
 			}else{
 				$GoBackPlace="/customers/ShowCustomersList_livewire";				
 				$userinf=User::where('serial_user','=',$UserSerial)->first();
-				$Contracts=Contract::where('contracts.serial_user','=',$UserSerial)
+				$ContractsRes=Contract::where('contracts.serial_user','=',$UserSerial)
 					->leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')
 					->select('contracts.*', 'users.*')
 					->paginate(InitConsts::DdisplayLineNumContractList());
+				Contract::where('contracts.serial_user','=',$UserSerial)
+					->leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')
+					->select('contracts.*', 'users.*')->dump();
 			}
-			print_r($Contracts);
+			//print "count=".count($ContractsRes)."<br>";
+			//print "UserSerial=".$UserSerial."<br>";
+			//print "GoBackPlace=".$GoBackPlace."<br>";
+			//print_r($ContractsRes);
+			//print_r($userinf);
+			$Contracts=$ContractsRes;
 			return view('customers.ListContract',compact("Contracts","UserSerial","userinf","GoBackPlace","header","slot"));
 			//return redirect('/customers/ShowCustomersList_livewire',compact("Contracts","UserSerial","userinf","GoBackPlace","header","slot",['page' => $request->get('page')]));
 
