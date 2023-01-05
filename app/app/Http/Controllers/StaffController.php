@@ -23,6 +23,68 @@ class StaffController extends Controller
 		$this->middleware('auth:staff');
 	}
 
+	public function ShowSyuseiContract($ContractSerial,$UserSerial){
+		session(['ContractManage' => 'syusei']);
+		session(['fromPage' => 'SyuseiContract']);
+		//$_SESSION['access_log'][0]=array_splice($_SESSION['access_log'], 0, 0,$_SERVER['HTTP_REFERER']);
+		$header="";$slot="";$selectedManth=array();$selectedManth=array();
+		$newKeiyakuSerial=$ContractSerial;
+		$targetContract=Contract::where('serial_keiyaku','=', $ContractSerial)->first();
+		$targetContractdetails=ContractDetail::where('serial_keiyaku','=', $ContractSerial)->get();
+		$targetUser=User::where('serial_user','=', $UserSerial)->first();
+		$HowToPay=array();$HowToPay['card']="";$HowToPay['cash']="";
+		$CardCompany="";$HowManyPay=array();
+		
+		$HowManyPay['CashSlct']=OtherFunc::make_html_how_many_slct($targetContract->how_many_pay_genkin,20,1);	
+		$HowManyPay['CardSlct']=OtherFunc::make_html_how_many_slct("",20,2);
+		if($targetContract->how_to_pay=="Credit Card"){
+			$HowToPay['card']='checked';
+			$CardCompany=$targetContract->card_company;
+			$HowManyPay['one']="";$HowManyPay['bunkatu']="";
+			if($targetContract->how_many_pay_card==1){
+				$HowManyPay['one']="Checked";
+			}else{
+				$HowManyPay['bunkatu']="Checked";
+				$HowManyPay['CardSlct']=OtherFunc::make_html_how_many_slct($targetContract->how_many_pay_card,20,2);		
+			}
+		}else{
+			$HowToPay['cash']='checked';
+			$HowManyPay['CashSlct']=OtherFunc::make_html_how_many_slct($targetContract->how_many_pay_genkin,20,1);			
+		}
+		$CardCompanySelect=OtherFunc::make_html_card_company_slct($CardCompany);
+
+		$KeiyakuNaiyouArray=array();$KeiyakuNumSlctArray=array();$KeiyakuTankaArray=array();$KeiyakuPriceArray=array();$KeiyakuNaiyouSelectArray=array();
+		$num=0;
+		foreach($targetContractdetails as $targetContractdetail){
+			$KeiyakuNaiyouArray[]=$targetContractdetail->keiyaku_naiyo;
+			$KeiyakuNaiyouSelectArray[]=OtherFunc::make_htm_get_treatment_slct($targetContractdetail->keiyaku_naiyo);
+			$keiyakuCnt=$targetContractdetail->keiyaku_num;
+			$KeiyakuNumSlctArray[]=OtherFunc::make_html_keiyaku_num_slct($targetContractdetail->keiyaku_num);
+			$KeiyakuTankaArray[]=$targetContractdetail->unit_price;
+			$KeiyakuPriceArray[]=$targetContractdetail->price;
+			$num++;
+		}
+		for($i=$num;$i<=5;$i++){
+			$KeiyakuNumSlctArray[]=OtherFunc::make_html_keiyaku_num_slct("");
+			$KeiyakuTankaArray[]="";
+			$KeiyakuPriceArray[]="";
+		}
+		if(isset($request->syusei_Btn)){
+			$GoBackPlace="/customers/ShowCustomersList_livewire";
+			if(Auth::user()->serial_teacher=="A_0001"){
+				$GoBackPlace="/customers/ShowCustomersList_livewire";
+			}else{
+				$GoBackPlace="/customers/ShowCustomersList_livewire";
+			}
+		}else if(isset($request->fromMenu)){
+			$GoBackPlace="../ShowMenuCustomerManagement";
+		}
+		$GoBackPlace="/customers/ShowContractList";
+		$TreatmentsTimes_slct=OtherFunc::make_html_TreatmentsTimes_slct($targetContract->treatments_num);
+
+		return view('customers.CreateContracts',compact("header","slot",'newKeiyakuSerial','targetContract',"targetContractdetails","targetUser","KeiyakuNaiyouArray","KeiyakuNumSlctArray","KeiyakuTankaArray","KeiyakuPriceArray","HowToPay","HowManyPay","CardCompanySelect","GoBackPlace","TreatmentsTimes_slct","KeiyakuNaiyouSelectArray"));
+	}
+
 	public function ShowContractList($UserSerial,Request $request){
 		$UserSerial=sprintf('%06d', trim($UserSerial));
 		
@@ -31,16 +93,13 @@ class StaffController extends Controller
 		if(isset($request->page_num)){
 			session(['target_page_for_pager'=>$request->page_num]);
 		}
-		//print 'page_num='.$request->page_num;
 		$header="";$slot="";
 		$key="";
 		$ContractsRes="";
 		if(Auth::user()->serial_staff=="S_0001"){
-			//$UserSerial="all";
 			if($UserSerial=="all"){
 				$userinf="";
 				$ContractsRes=Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->paginate(initConsts::DdisplayLineNumContractList());
-				//Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->dd();
 				$GoBackPlace="/ShowMenuCustomerManagement/";
 			}else{
 				$GoBackPlace="/customers/ShowCustomersList_livewire";				
@@ -49,15 +108,7 @@ class StaffController extends Controller
 					->leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')
 					->select('contracts.*', 'users.*')
 					->paginate(InitConsts::DdisplayLineNumContractList());
-				Contract::where('contracts.serial_user','=',$UserSerial)
-					->leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')
-					->select('contracts.*', 'users.*')->dump();
 			}
-			//print "count=".count($ContractsRes)."<br>";
-			//print "UserSerial=".$UserSerial."<br>";
-			//print "GoBackPlace=".$GoBackPlace."<br>";
-			//print_r($ContractsRes);
-			//print_r($userinf);
 			$Contracts=$ContractsRes;
 			return view('customers.ListContract',compact("Contracts","UserSerial","userinf","GoBackPlace","header","slot"));
 			//return redirect('/customers/ShowCustomersList_livewire',compact("Contracts","UserSerial","userinf","GoBackPlace","header","slot",['page' => $request->get('page')]));
@@ -65,7 +116,7 @@ class StaffController extends Controller
 		}else{
 			if($UserSerial=="all"){
 				$userinf="";
-				$Contracts=Keiyaku::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->paginate(initConsts::DdisplayLineNumContractList());
+				$Contracts=Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->paginate(initConsts::DdisplayLineNumContractList());
 			
 				$GoBackPlace="/ShowMenuCustomerManagement/";
 			}else{

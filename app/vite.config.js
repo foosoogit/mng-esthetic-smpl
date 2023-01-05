@@ -5,12 +5,13 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/css/app.css',
-                //'resources/sass/app.scss',
+                //'resources/css/app.css',
+                'resources/sass/app.scss',
                 'resources/js/app.js',
             ],
             refresh: true,
         }),
+        vue(), //  追加
     ],
     // ここから追加
     server: {
