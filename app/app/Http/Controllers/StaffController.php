@@ -23,6 +23,16 @@ class StaffController extends Controller
 		$this->middleware('auth:staff');
 	}
 
+	public function deleteContract($serial_contract,$serial_user){
+		$header="";$slot="";
+		$delContract=Contract::where('serial_keiyaku','=',$serial_contract)->delete();
+		$delContractDetails=Contract::where('serial_keiyaku','=',$serial_contract)->delete();
+		$delPaymentHistory=PaymentHistory::where('serial_keiyaku','=',$serial_contract)->delete();
+		$delVisitHistory=VisitHistory::where('serial_keiyaku','=',$serial_contract)->delete();
+
+		return redirect('/customers/ShowContractList/'.$serial_user);
+	}
+
 	public function ShowSyuseiContract($ContractSerial,$UserSerial){
 		session(['ContractManage' => 'syusei']);
 		session(['fromPage' => 'SyuseiContract']);
@@ -208,7 +218,7 @@ class StaffController extends Controller
 					'serial_keiyaku'=>session('ContractSerial'),
 					'serial_user'=>session('UserSerial'),
 					'payment_history_serial'=>$PaymentHistorySerial,
-					'serial_Staff'=>Auth::user()->serial_Staff,
+					'serial_staff'=>Auth::user()->serial_staff,
 					'date_payment'=>$PaymentDateArra[$i],
 					'amount_payment'=>str_replace(',','',$PaymentAmountArra[$i]),
 					'how_to_pay'=>$PaymentHowToPayArray[$i]
@@ -268,7 +278,7 @@ class StaffController extends Controller
 		$header="";$slot="";$selectedManth=array();$selectedManth=array();
 		$targetVisitHistoryArray=VisitHistory::where('serial_keiyaku','=', $ContractSerial)->get();
 		$targetPaymentHistoryArray=PaymentHistory::where('serial_keiyaku','=', $ContractSerial)->get();
-
+		//PaymentHistory::where('serial_keiyaku','=', $ContractSerial)->dump();
 		$targetUser=User::where('serial_user','=', $UserSerial)->first();
 		$targetContract=Contract::where('serial_keiyaku','=', $ContractSerial)->first();
 		$targetContractDetails=ContractDetail::where('serial_keiyaku','=', $ContractSerial)->get();
@@ -368,6 +378,7 @@ class StaffController extends Controller
 			$GoBackToPlace="/customers/ShowCustomersList_livewire";
 		}
 		$GoBackToPlace=session('ShowInpRecordVisitPaymentfromPage');
+		//print_r($PaymentDateArray);
 		return view('customers.PaymentRegistration',compact("GoBackToPlace","header","slot",'VisitDateArray','PaymentDateArray','targetUser','targetContract','KeiyakuNaiyou','PaymentAmountArray','HowToPayCheckedArray','visit_disabeled','sejyutukaisu','set_gray_array','payment_disabeled','set_gray_pay_array','set_background_gray_pay_array','paymentCount','TreatmentDetailsArray','TreatmentDetailsSelectArray'));
 	}
 

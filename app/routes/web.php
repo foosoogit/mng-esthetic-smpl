@@ -33,6 +33,8 @@ Route::post('/staff/register', [App\Http\Controllers\Staff\RegisterController::c
 //Route::prefix('staff')->group(['middleware' => ['auth:staff'], function(){
 //Route::get('/menuStaff', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement'])->name('StaffMenu');
 Route::group(['middleware' => ['auth:staff']], function(){
+    Route::get('/customers/deleteContract/{serial_contract}/{serial_user}',[\App\Http\Controllers\StaffController::class,'deleteContract'],function($serial_contract,$serial_user){});
+
     Route::get('/customers/ShowSyuseiContract/{ContractSerial}/{UserSerial}', [\App\Http\Controllers\StaffController::class,'ShowSyuseiContract',function($ContractSerial,$UserSerial){session(['ContractSerial' => $ContractSerial,'UserSerial'=>$UserSerial]);}]);
 	Route::post('/customers/ShowSyuseiContract/{ContractSerial}/{UserSerial}', [\App\Http\Controllers\StaffController::class,'ShowSyuseiContract',function($ContractSerial,$UserSerial){}]);
 
