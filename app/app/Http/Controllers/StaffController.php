@@ -23,6 +23,18 @@ class StaffController extends Controller
 		$this->middleware('auth:staff');
 	}
 
+	public function ShowCustomersList(){
+		/*
+		$header="";$slot="";
+		$delContract=Contract::where('serial_keiyaku','=',$serial_contract)->delete();
+		$delContractDetails=Contract::where('serial_keiyaku','=',$serial_contract)->delete();
+		$delPaymentHistory=PaymentHistory::where('serial_keiyaku','=',$serial_contract)->delete();
+		$delVisitHistory=VisitHistory::where('serial_keiyaku','=',$serial_contract)->delete();
+		return redirect('/customers/ShowContractList/'.$serial_user);
+		*/
+		return view('welcome');
+	}
+
 	public function deleteContract($serial_contract,$serial_user){
 		$header="";$slot="";
 		$delContract=Contract::where('serial_keiyaku','=',$serial_contract)->delete();
@@ -40,7 +52,9 @@ class StaffController extends Controller
 		$header="";$slot="";$selectedManth=array();$selectedManth=array();
 		$newKeiyakuSerial=$ContractSerial;
 		$targetContract=Contract::where('serial_keiyaku','=', $ContractSerial)->first();
+		//Contract::where('serial_keiyaku','=', $ContractSerial)->dd();
 		$targetContractdetails=ContractDetail::where('serial_keiyaku','=', $ContractSerial)->get();
+		//ContractDetail::where('serial_keiyaku','=', $ContractSerial)->dd();
 		$targetUser=User::where('serial_user','=', $UserSerial)->first();
 		$HowToPay=array();$HowToPay['card']="";$HowToPay['cash']="";
 		$CardCompany="";$HowManyPay=array();
@@ -81,7 +95,7 @@ class StaffController extends Controller
 		}
 		if(isset($request->syusei_Btn)){
 			$GoBackPlace="/customers/ShowCustomersList_livewire";
-			if(Auth::user()->serial_teacher=="A_0001"){
+			if(Auth::user()->serial_teacher=="S_0001"){
 				$GoBackPlace="/customers/ShowCustomersList_livewire";
 			}else{
 				$GoBackPlace="/customers/ShowCustomersList_livewire";
@@ -96,7 +110,8 @@ class StaffController extends Controller
 	}
 
 	public function ShowContractList($UserSerial,Request $request){
-		$UserSerial=sprintf('%06d', trim($UserSerial));
+		
+		//$UserSerial=sprintf('%06d', trim($UserSerial));
 		
 		session(['fromPage' => 'ContractList']);
 		session(['targetUserSerial' => $UserSerial]);
@@ -105,21 +120,23 @@ class StaffController extends Controller
 		}
 		$header="";$slot="";
 		$key="";
-		$ContractsRes="";
+		$Contracts="";
+		//print "UserSerial=".$UserSerial."<BR>";
 		if(Auth::user()->serial_staff=="S_0001"){
 			if($UserSerial=="all"){
 				$userinf="";
-				$ContractsRes=Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->paginate(initConsts::DdisplayLineNumContractList());
+				$Contracts=Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->paginate(initConsts::DdisplayLineNumContractList());
+				//Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->dump();
 				$GoBackPlace="/ShowMenuCustomerManagement/";
 			}else{
 				$GoBackPlace="/customers/ShowCustomersList_livewire";				
 				$userinf=User::where('serial_user','=',$UserSerial)->first();
-				$ContractsRes=Contract::where('contracts.serial_user','=',$UserSerial)
+				$Contracts=Contract::where('contracts.serial_user','=',$UserSerial)
 					->leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')
 					->select('contracts.*', 'users.*')
 					->paginate(InitConsts::DdisplayLineNumContractList());
 			}
-			$Contracts=$ContractsRes;
+			//$Contracts=$ContractsRes;
 			return view('customers.ListContract',compact("Contracts","UserSerial","userinf","GoBackPlace","header","slot"));
 			//return redirect('/customers/ShowCustomersList_livewire',compact("Contracts","UserSerial","userinf","GoBackPlace","header","slot",['page' => $request->get('page')]));
 

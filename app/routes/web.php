@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\StaffController;
 use App\Http\Livewire\CustomerSearch;
+use App\Http\Livewire\DailyReport;
+use App\Http\Livewire\Counter;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,12 +20,14 @@ use App\Http\Livewire\CustomerSearch;
 
 Route::get('/', function () {
     return view('welcome');
+    //return view('livewire.livewire-test');
 });
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+//Route::get('/livewire', [App\Http\Livewire\Counter::class]);
+Route::view('/livewire', [App\Http\Livewire\Counter::class]);
 Route::view('/staff/login', 'staff/login');
 Route::post('/staff/login', [App\Http\Controllers\Staff\LoginController::class,'login']);
 Route::view('/staff/register', 'staff/register');
@@ -33,14 +37,15 @@ Route::post('/staff/register', [App\Http\Controllers\Staff\RegisterController::c
 //Route::prefix('staff')->group(['middleware' => ['auth:staff'], function(){
 //Route::get('/menuStaff', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement'])->name('StaffMenu');
 Route::group(['middleware' => ['auth:staff']], function(){
+    Route::get('/workers/ShowDailyReport', DailyReport::class);
+	Route::post('/workers/ShowDailyReport', DailyReport::class);
+    Route::get('/customers/ShowCustomersList_livewire_from_top_menu/{target_user_serial}', [\App\Http\Livewire\CustomerSearch::class,'search_from_top_menu'],function($target_user_serial){});
+	Route::post('/customers/ShowCustomersList_livewire_from_top_menu', CustomerSearch::class,function(Request $request){});
     Route::get('/customers/deleteContract/{serial_contract}/{serial_user}',[\App\Http\Controllers\StaffController::class,'deleteContract'],function($serial_contract,$serial_user){});
-
     Route::get('/customers/ShowSyuseiContract/{ContractSerial}/{UserSerial}', [\App\Http\Controllers\StaffController::class,'ShowSyuseiContract',function($ContractSerial,$UserSerial){session(['ContractSerial' => $ContractSerial,'UserSerial'=>$UserSerial]);}]);
 	Route::post('/customers/ShowSyuseiContract/{ContractSerial}/{UserSerial}', [\App\Http\Controllers\StaffController::class,'ShowSyuseiContract',function($ContractSerial,$UserSerial){}]);
-
     Route::get('/customers/ShowContractList/{UserSerial}', [\App\Http\Controllers\StaffController::class,'ShowContractList',function($UserSerial){}]);
 	Route::post('/customers/ShowContractList/{UserSerial}', [\App\Http\Controllers\StaffController::class,'ShowContractList',function($UserSerial){}]);
-
     Route::post('/customers/ShowSyuseiCustomer', [\App\Http\Controllers\StaffController::class,'ShowSyuseiCustomer',function(Request $request){}]);
     Route::get('/customers/deleteCustomer/{serial_user}',[\App\Http\Controllers\StaffController::class,'deleteCustomer'],function($serial_user){});
     Route::get('ShowMenuCustomerManagement',[\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement']);
@@ -55,6 +60,7 @@ Route::group(['middleware' => ['auth:staff']], function(){
 	Route::post('/customers/insertCustomer', [\App\Http\Controllers\StaffController::class,'insertCustomer'],function(Request $request){});
     Route::get('/menuStaff', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement'])->name('staff.menu');
     Route::get('/customers/ShowCustomersList_livewire', CustomerSearch::class);
+    Route::get('/customers/ShowCustomersList', [\App\Http\Controllers\StaffController::class,'ShowCustomersList']);
     Route::get('/ShowUserList', [\App\Http\Controllers\StaffController::class,'ShowUserList'])->name('ShowUserList');
     Route::get('/customers/ShowInputCustomer', [\App\Http\Controllers\StaffController::class,'ShowInputCustomer']);
     Route::post('staff/logout', [App\Http\Controllers\Staff\LoginController::class,'logout'])->name('staff.logout');

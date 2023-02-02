@@ -203,6 +203,8 @@ class OtherFunc extends Controller
 				$interval_day=$diff->format('%a');
 				if($interval_day>30){
 					$terget_user=DB::table('users')->where('serial_user','=', $value->serial_user)->first();
+					//DB::table('users')->where('serial_user','=', $value->serial_user)->dd();
+					//print_r($terget_user);
 					$targetNameHtm.='・<input type="submit" formaction="/customers/ShowInpRecordVisitPayment/'.$value->serial_keiyaku.'/'.$value->serial_user.'" name="btn_serial" value="'.$terget_user->name_sei.' '.$terget_user->name_mei.'">&nbsp';
 				}
 			}
