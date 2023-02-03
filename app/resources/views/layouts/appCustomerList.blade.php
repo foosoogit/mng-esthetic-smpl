@@ -75,6 +75,9 @@
         </nav>
 
         <main class="py-4">
+            <livewire:Counter>
+            {{--<livewire:LivewireTest>--}}
+                
             @yield('content')
         </main>
     </div>

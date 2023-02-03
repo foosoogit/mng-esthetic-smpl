@@ -1,5 +1,7 @@
-@extends('layouts.staff')
-@section('content')
+{{--
+	@extends('layouts.staff')
+	@section('content')
+--}}
 <div>
 {{--
 {{$title}}
@@ -9,7 +11,7 @@
 {{--<button wire:click="increment">+</button>
 	<h1>{{ $count }}</h1> 
 	--}}
-	<script src="{{  asset('/js/ListCustomer.js') }}" defer></script>
+<script src="{{  asset('/js/ListCustomer.js') }}" defer></script>
 <section>
 	<div class="containor">
 		<div class="row justify-content-center">
@@ -31,9 +33,10 @@
 					<div class="card-header">
 						<h3>顧客一覧</h3>
 					</div>
-					<button type="button" name="SerchBtn" id="SerchBtn" wire:click="search()">検索</button>
-						<input type="text" name="kensakukey_txt" id="kensakukey_txt" class="bg-white-500 border-solid pxtext-black rounded px-3 py-1" wire:model.defer="kensakukey">
 					<button type="button" wire:click="searchClear() onclick="document.getElementById('kensakukey_txt').value=''">解除</button> 
+						<input type="text" name="kensakukey_txt" id="kensakukey_txt" class="bg-white-500 border-solid pxtext-black rounded px-3 py-1" wire:model.defer="kensakukey">
+						<button type="button" name="SerchBtn" id="SerchBtn" wire:click="search()">検索</button>
+						
 					<div class="card-body">
 					<table class="table-auto" border-solid>
 						<thead>
@@ -65,8 +68,9 @@
 					<tbody>
 						@foreach ($users as $user)
 							<tr>
-								<td class="border px-4 py-2"><form action="ShowSyuseiCustomer" method="POST">@csrf<input name="syusei_Btn" type="submit" value="{{ $user->serial_user}}"></form>
-</td>
+								<td class="border px-4 py-2">
+									<form action="ShowSyuseiCustomer" method="POST">@csrf<input name="syusei_Btn" type="submit" value="{{ $user->serial_user}}"></form>
+								</td>
 								<td class="border px-4 py-2">
 									<form action="/customers/ShowContractList/{{$user->serial_user}}" method="POST">@csrf<input name="keiyaku_Btn" type="submit" value="履歴・新規">
 									<input name="page_num" type="hidden" value="{{$users->currentPage()}}"/>
@@ -101,4 +105,4 @@
 	</div>
 </section>
 </div>
-@endsection
+{{--@endsection--}}
