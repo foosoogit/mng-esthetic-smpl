@@ -181,7 +181,7 @@ class OtherFunc extends Controller
 			->distinct()->select('name_sei','name_mei','payment_histories.serial_user')->get();
 		$targetNameHtm="";
 		foreach($DefaultUsersInf as $value){
-			$targetNameHtm.='<button type="submit" name="btn_serial" value="'.$value->serial_user.'">・'.$value->name_sei.' '.$value->name_mei.'&nbsp;</button>';
+			$targetNameHtm.='<button type="submit" name="btn_serial" value="'.$value->serial_user.'">'.$value->name_sei.' '.$value->name_mei.'&nbsp;</button>';
 		}
 		return $targetNameHtm;
 	}

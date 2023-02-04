@@ -1,7 +1,5 @@
-{{--
-	@extends('layouts.staff')
-	@section('content')
---}}
+@extends('layouts.staff')
+@section('content')
 <div>
 {{--
 {{$title}}
@@ -11,36 +9,31 @@
 {{--<button wire:click="increment">+</button>
 	<h1>{{ $count }}</h1> 
 	--}}
-<script src="{{  asset('/js/ListCustomer.js') }}" defer></script>
+	<script src="{{  asset('/js/ListCustomer.js') }}" defer></script>
 <section>
 	<div class="containor">
 		<div class="row justify-content-center">
 			<div class="col-md-12">
 				<div class="card" align="center">
-					<div class="row">
-						<div class="col-auto"><button class="btn btn-primary active" type="button" onclick="location.href='/menuStaff'">メニューに戻る</button></div>
-						@if($from_place=="dayly_rep")
-							<div class="col-auto">
-								<form method="POST" action="/workers/ShowDailyReport_from_customers_List">@csrf
-									<input name="target_day" type="hidden" value="{{$target_day}}"/>
-									<button type="submit" name="target_date" class="btn btn-primary" value="{{$target_day}}">日報に戻る</button>
-								</form>
-							</div>
-						@endif
-						<div class="col-auto">
-							<form method="GET" action="/customers/ShowInputCustomer">@csrf
-								<button class="btn btn-primary" type="submit" name="CustomerListCreateBtn" value="CustomerList">新規顧客登録</button>
-							
-							</form>	
-						</div>
-					</div>
+				<button class="bg-blue-500 text-white rounded px-3 py-1" type="button" onclick="location.href='/menuStaff'">メニューに戻る</button>
+				@if($from_place=="dayly_rep")
+					<form method="POST" action="/workers/ShowDailyReport_from_customers_List">@csrf
+						<input name="target_day" type="hidden" value="{{$target_day}}"/>
+						<button type="submit" name="target_date" class="bg-blue-500 text-white rounded px-3 py-1" value="{{$target_day}}">日報に戻る</button>
+					</form>
+				@endif
+				<div class="font-semibold text-2xl text-slate-600">[顧客リスト]</div>
+					<form method="GET" action="/customers/ShowInputCustomer">@csrf
+						<p style="text-indent:20px" class="py-1.5">
+						<button class="bg-blue-500 text-white rounded px-3 py-1" type="submit" name="CustomerListCreateBtn" value="CustomerList">新規顧客登録</button>
+						</p>
+					</form>	
 					<div class="card-header">
 						<h3>顧客一覧</h3>
 					</div>
-					<button type="button" wire:click="searchClear() onclick="document.getElementById('kensakukey_txt').value=''">解除</button> 
+					<button type="button" name="SerchBtn" id="SerchBtn" wire:click="search()">検索</button>
 						<input type="text" name="kensakukey_txt" id="kensakukey_txt" class="bg-white-500 border-solid pxtext-black rounded px-3 py-1" wire:model.defer="kensakukey">
-						<button type="button" name="SerchBtn" id="SerchBtn" wire:click="search()">検索</button>
-						
+					<button type="button" wire:click="searchClear() onclick="document.getElementById('kensakukey_txt').value=''">解除</button> 
 					<div class="card-body">
 					<table class="table-auto" border-solid>
 						<thead>
@@ -72,9 +65,8 @@
 					<tbody>
 						@foreach ($users as $user)
 							<tr>
-								<td class="border px-4 py-2">
-									<form action="ShowSyuseiCustomer" method="POST">@csrf<input name="syusei_Btn" type="submit" value="{{ $user->serial_user}}"></form>
-								</td>
+								<td class="border px-4 py-2"><form action="ShowSyuseiCustomer" method="POST">@csrf<input name="syusei_Btn" type="submit" value="{{ $user->serial_user}}"></form>
+</td>
 								<td class="border px-4 py-2">
 									<form action="/customers/ShowContractList/{{$user->serial_user}}" method="POST">@csrf<input name="keiyaku_Btn" type="submit" value="履歴・新規">
 									<input name="page_num" type="hidden" value="{{$users->currentPage()}}"/>
@@ -109,4 +101,4 @@
 	</div>
 </section>
 </div>
-{{--@endsection--}}
+@endsection
