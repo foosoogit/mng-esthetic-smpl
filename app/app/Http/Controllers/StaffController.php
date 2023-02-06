@@ -15,7 +15,8 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContractDetail;
 use App\Models\VisitHistory;
-use App\Http\Livewire\LivewireTest;
+//use App\Http\Livewire\LivewireTest;
+use App\Models\Branch;
 
 class StaffController extends Controller
 {
@@ -24,18 +25,47 @@ class StaffController extends Controller
 		$this->middleware('auth:staff');
 	}
 
-	public function ShowCustomersList(){
-		/*
-		$header="";$slot="";
-		$delContract=Contract::where('serial_keiyaku','=',$serial_contract)->delete();
-		$delContractDetails=Contract::where('serial_keiyaku','=',$serial_contract)->delete();
-		$delPaymentHistory=PaymentHistory::where('serial_keiyaku','=',$serial_contract)->delete();
-		$delVisitHistory=VisitHistory::where('serial_keiyaku','=',$serial_contract)->delete();
-		return redirect('/customers/ShowContractList/'.$serial_user);
-		*/
-		//return view('clist');
-		return view('welcome');
-		//return view('layouts.appCustomerList');
+	public function ShowBranchRegistration($target_branch_serial){
+		$target_branch_inf="";
+		if($target_branch_serial<>"new"){
+			$target_branch_inf=Branch::where('serial_branch','=',$target_branch_serial)->first();
+		}
+		return view('staff.CreateBranch',compact('target_branch_inf'));
+	}
+	
+	function upsertBranch(Request $request){
+		if($request->serial_branch=="new"){
+			$serialMax=Branch::max('serial_branch');
+			if($serialMax==""){
+				$targetSerial="B_001";
+			}else{
+				$targetSerial=++$serialMax;
+			}
+		}else{
+			$targetSerial=$request->serial_branch;
+		}
+		//print "request->serial_branch=".$request->serial_branch."<br>";
+		//print "serialMax=".$serialMax."<br>";
+		//print "targetSerial=".$targetSerial."<br>";
+		$targetData=[
+			'serial_branch' => $targetSerial,
+			'name_branch' => $request->name_branch,
+			'postal'=> $request->zip01,
+			'address_branch' => $request->addr01,
+			'email' => $request->mail,
+			'phone_branch' => $request->phone,
+			'open_date' => $request->opened_date,
+			'note' => $request->note,
+		];
+		$targetDataArray[]=$targetData;
+
+		//$PaymentHistorySerial++;
+		Branch::upsert($targetDataArray,['serial_branch']);
+		return redirect('/workers/ShowBranchList');
+	}
+
+	public function ShowBranchList(){
+		return view('staff.BranchList');
 	}
 
 	public function deleteContract($serial_contract,$serial_user){
@@ -51,13 +81,10 @@ class StaffController extends Controller
 	public function ShowSyuseiContract($ContractSerial,$UserSerial){
 		session(['ContractManage' => 'syusei']);
 		session(['fromPage' => 'SyuseiContract']);
-		//$_SESSION['access_log'][0]=array_splice($_SESSION['access_log'], 0, 0,$_SERVER['HTTP_REFERER']);
 		$header="";$slot="";$selectedManth=array();$selectedManth=array();
 		$newKeiyakuSerial=$ContractSerial;
 		$targetContract=Contract::where('serial_keiyaku','=', $ContractSerial)->first();
-		//Contract::where('serial_keiyaku','=', $ContractSerial)->dd();
 		$targetContractdetails=ContractDetail::where('serial_keiyaku','=', $ContractSerial)->get();
-		//ContractDetail::where('serial_keiyaku','=', $ContractSerial)->dd();
 		$targetUser=User::where('serial_user','=', $UserSerial)->first();
 		$HowToPay=array();$HowToPay['card']="";$HowToPay['cash']="";
 		$CardCompany="";$HowManyPay=array();
@@ -98,27 +125,20 @@ class StaffController extends Controller
 		}
 		if(isset($request->syusei_Btn)){
 			$GoBackPlace="/customers/UserList";
-			//$GoBackPlace="/customers/ShowCustomersList_livewire";
 			if(Auth::user()->serial_teacher=="S_0001"){
 				$GoBackPlace="/customers/UserList";
-				//$GoBackPlace="/customers/ShowCustomersList_livewire";
 			}else{
 				$GoBackPlace="/customers/UserList";
-				//$GoBackPlace="/customers/ShowCustomersList_livewire";
 			}
 		}else if(isset($request->fromMenu)){
 			$GoBackPlace="../ShowMenuCustomerManagement";
 		}
 		$GoBackPlace="/customers/ShowContractList";
 		$TreatmentsTimes_slct=OtherFunc::make_html_TreatmentsTimes_slct($targetContract->treatments_num);
-
 		return view('customers.CreateContracts',compact("header","slot",'newKeiyakuSerial','targetContract',"targetContractdetails","targetUser","KeiyakuNaiyouArray","KeiyakuNumSlctArray","KeiyakuTankaArray","KeiyakuPriceArray","HowToPay","HowManyPay","CardCompanySelect","GoBackPlace","TreatmentsTimes_slct","KeiyakuNaiyouSelectArray"));
 	}
 
 	public function ShowContractList($UserSerial,Request $request){
-		
-		//$UserSerial=sprintf('%06d', trim($UserSerial));
-		
 		session(['fromPage' => 'ContractList']);
 		session(['targetUserSerial' => $UserSerial]);
 		if(isset($request->page_num)){
@@ -127,15 +147,12 @@ class StaffController extends Controller
 		$header="";$slot="";
 		$key="";
 		$Contracts="";
-		//print "UserSerial=".$UserSerial."<BR>";
 		if(Auth::user()->serial_staff=="S_0001"){
 			if($UserSerial=="all"){
 				$userinf="";
 				$Contracts=Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->paginate(initConsts::DdisplayLineNumContractList());
-				//Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->dump();
 				$GoBackPlace="/ShowMenuCustomerManagement/";
 			}else{
-				//$GoBackPlace="/customers/ShowCustomersList_livewire";	
 				$GoBackPlace="/customers/UserList";			
 				$userinf=User::where('serial_user','=',$UserSerial)->first();
 				$Contracts=Contract::where('contracts.serial_user','=',$UserSerial)
@@ -143,9 +160,7 @@ class StaffController extends Controller
 					->select('contracts.*', 'users.*')
 					->paginate(InitConsts::DdisplayLineNumContractList());
 			}
-			//$Contracts=$ContractsRes;
 			return view('customers.ListContract',compact("Contracts","UserSerial","userinf","GoBackPlace","header","slot"));
-			//return redirect('/customers/ShowCustomersList_livewire',compact("Contracts","UserSerial","userinf","GoBackPlace","header","slot",['page' => $request->get('page')]));
 
 		}else{
 			if($UserSerial=="all"){
@@ -155,26 +170,22 @@ class StaffController extends Controller
 				$GoBackPlace="/ShowMenuCustomerManagement/";
 			}else{
 				$GoBackPlace="/customers/UserList";
-				//$GoBackPlace="/customers/ShowCustomersList_livewire";				
 				$userinf=User::where('serial_user','=',$UserSerial)->first();
 				$Contracts=Contract::where('contracts.serial_user','=',$UserSerial)
 					->leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')
 					->select('contracts.*', 'users.*')
 					->paginate(initConsts::DdisplayLineNumContractList());
 			}
-			//print_r($Contracts);
 			return view('customers.ListContract',compact("Contracts","UserSerial","userinf","GoBackPlace","header","slot"));
 		}
 	}
 
 	public function ShowSyuseiCustomer(Request $request){
 		session(['fromPage' => 'SyuseiCustomer']);
-		//$userInfo=User::where('serial_user','=',$request->input('syusei_Btn'))->first();
 		session(['CustomerManage' => 'syusei']);
 		$header="";$slot="";$selectedManth=array();$selectedManth=array();
 		$target_user=User::where('serial_user','=', $request->input('syusei_Btn'))->first();
 		$html_birth_year_slct=OtherFunc::make_html_slct_birth_year_list($target_user->birth_year);
-		//$mnt="m".sprintf('%02d', $target_user->birth_month);
 		$selectedManth[(int)$target_user->birth_month]="Selected";
 		$selectedDay[(int)$target_user->birth_day]="Selected";
 		$selectedRegion[$target_user->address_region]="Selected";
@@ -184,13 +195,10 @@ class StaffController extends Controller
 		$saveFlg="false,".session('CustomerManage');$btnDisp="　修　正　";
 		$html_reason_coming="";
 		if(isset($request->syusei_Btn)){
-			//$GoBackPlace="/customers/ShowCustomersList";
 			$GoBackPlace="/customers/UserList";
-			//$GoBackPlace="/customers/ShowCustomersList_livewire";
 			$html_reason_coming=OtherFunc::make_html_reason_coming_cbox($target_user->reason_coming);
 
 		}else if(isset($request->fromMenu)){
-			//$GoBackPlace="/customers/ShowCustomersList_livewire";
 			$html_reason_coming=OtherFunc::make_html_reason_coming_cbox("");
 			$GoBackPlace="../ShowMenuCustomerManagement";
 		}
@@ -204,11 +212,7 @@ class StaffController extends Controller
 		$deleContractDetail=ContractDetail::where('serial_user','=',$serial_user)->delete();
 		$deleContractDetail=PaymentHistory::where('serial_user','=',$serial_user)->delete();
 		$deleVisitHistory=VisitHistory::where('serial_user','=',$serial_user)->delete();
-		//return redirect('/customers/ShowCustomersList');
-		//$GoBackPlace="/customers/UserList";
 		return redirect('/customers/UserList');
-		//return redirect('/customers/ShowCustomersList_livewire');
-		//return view('customers.InfoCustomer',compact("user","header","slot"));
 	}
 	
 	private function save_recorder($location){
@@ -416,7 +420,6 @@ class StaffController extends Controller
 		Storage::append('errorCK.txt', $kyo." / ".$motourl);
 		$targetData=array();
 		$how_many_pay_card=1;$how_many_pay_card="";
-		//print "how_many_pay_card=".$request->how_many_pay_card;
 		if($request->HowmanyCard=='一括'){
 			$how_many_pay_card=1;
 		}else{
@@ -633,29 +636,17 @@ class StaffController extends Controller
 		$header="";$slot="";
 		$html_birth_year_slct=OtherFunc::make_html_slct_birth_year_list("");
 		$html_birth_year_slct=trim($html_birth_year_slct);
-		//CustomerListCreateBtn
 		$GoBackPlace=session('GoBackPlace');
-		
-		/*
-		$GoBackPlace="../ShowMenuCustomerManagement";
-		
-		if(isset($request->CustomerListCreateBtn)){
-			$GoBackPlace=session('GoBackPlace');
-		}
-		*/
 		$saveFlg="true,".session('CustomerManage');
 		$target_user="";$selectedManth=null;$selectedDay=null;$selectedRegion=null;
 		if(session('fromMenu')=='MenuCustomerManagement'){
 			$GoToBackPlace="../ShowMenuCustomerManagement";
 		}else if(session('fromMenu')=='CustomersList'){
 			$GoBackToPlace="/customers/UserList";
-			//$GoToBackPlace="/customers/ShowCustomersList_livewire";
 		}
-		//print 'fromMenu='.session('fromMenu');
 		if(Auth::user()->serial_Staff=="A_0001"){
 			if(session('CustomerManage')=='syusei'){
 				return redirect("/customers/UserList");
-				//return redirect("/customers/ShowCustomersList_livewire");
 			}else{
 				$userInf=User::where('serial_user','=',$targetSerial)->first();
 				$msg="氏名: ".$userInf->name_sei." ".$userInf->name_mei."さんのデータを新規登録しました。";
@@ -664,7 +655,6 @@ class StaffController extends Controller
     	}else{
 			if(session('CustomerManage')=='syusei'){
 				return redirect("/customers/UserList");
-				//return redirect("/customers/ShowCustomersList_livewire");
 			}else{
 				$userInf=User::where('serial_user','=',$targetSerial)->first();
 				$msg="氏名: ".$userInf->name_sei." ".$userInf->name_mei."さんのデータを新規登録しました。";
@@ -674,8 +664,6 @@ class StaffController extends Controller
 	}
 
 	public function ShowMenuCustomerManagement(){
-		//print "ShowMenuCustomerManagement<br>";
-        //$OF = new OtherFunc;
 		session(['fromPage' => 'MenuCustomerManagement']);
 		session(['fromMenu' => 'MenuCustomerManagement']);
 		$header="";$slot="";
@@ -683,7 +671,6 @@ class StaffController extends Controller
 		session(['targetYear' => date('Y')]);
 		$targetYear=session('targetYear');
 		if(isset($_SERVER['HTTP_REFERER'])){
-			//$OF->et_access_history($_SERVER['HTTP_REFERER']);
 			OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
 		}
 
@@ -698,31 +685,25 @@ class StaffController extends Controller
 		$default_customers=OtherFunc::make_htm_get_default_user();
 		$not_coming_customers=OtherFunc::make_htm_get_not_coming_customer();
 		$htm_kesanMonth=OtherFunc::make_html_month_slct(initConsts::KesanMonth());
-		//list($targetNameHtmFront, $targetNameHtmBack) =OtherFunc::make_htm_get_not_coming_customer();
 		$csrf="csrf";
 		session(['GoBackPlace' => '../ShowMenuCustomerManagement']);
 		return view('staff.MenuCustomerManagement',compact("header","slot","html_year_slct","html_month_slct","DefaultUsersInf","not_coming_customers","default_customers",'htm_kesanMonth'));
 	}
 
 	public function ShowUserList(){
-		//return view('welcome','users' => User::all()->paginate(15));
-		//return view('staff.UserList');
+
 		$users=User::orderBy('created_at')->paginate(15);
 		return view('staff.UserList',compact('users'));
 	}
 	public function ShowInputCustomer(Request $request){
-		//print 'fromMenu='.session('fromMenu');
 		session(['fromPage' => 'InputCustomer']);
 		session(['CustomerManage' => 'new']);
 		$header="";$slot="";
 		$html_birth_year_slct=OtherFunc::make_html_slct_birth_year_list("");
 		$html_birth_year_slct=trim($html_birth_year_slct);
-		//CustomerListCreateBtn
-		//insertCustomerFromMenu
 		$GoBackPlace="../ShowMenuCustomerManagement";
 		if(isset($request->CustomerListCreateBtn)){
 			$GoBackPlace="/customers/UserList";
-			//$GoBackPlace="/customers/ShowCustomersList_livewire";
 		}
 		setcookie('TorokuMessageFlg','false',time()+60);
 
@@ -731,11 +712,6 @@ class StaffController extends Controller
 		$saveFlg="false,".session('CustomerManage');$btnDisp="　登　録　";
 		$html_reason_coming="";
 		$html_reason_coming=OtherFunc::make_html_reason_coming_cbox("");
-		//if(Auth::user()->serial_Staff=="A_0001"){
-			return view('customers.CreateCustomer',compact('header',"slot",'html_birth_year_slct',"target_user","selectedManth","selectedDay","selectedRegion","GoBackPlace","saveFlg","btnDisp","GenderRdo","html_reason_coming"));
-		//}else{
-		//	return view('customers.CreateCustomer',compact('header',"slot",'html_birth_year_slct',"target_user","selectedManth","selectedDay","selectedRegion","GoBackPlace","saveFlg","btnDisp","GenderRdo","html_reason_coming"));
-		//}
+		return view('customers.CreateCustomer',compact('header',"slot",'html_birth_year_slct',"target_user","selectedManth","selectedDay","selectedRegion","GoBackPlace","saveFlg","btnDisp","GenderRdo","html_reason_coming"));
 	}
-
 }

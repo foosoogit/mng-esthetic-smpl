@@ -20,9 +20,7 @@
     @livewireStyles
 </head>
 <body>
-    {{--<livewire:livewire-test2>--}}
-    {{--<livewire:livewire-test2>--}}
-    <livewire:customer-search>
+    <livewire:branch-list>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">

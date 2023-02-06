@@ -68,7 +68,7 @@
 
 				<li><p><form method="GET" action="/workers/ShowTreatmentContents">@csrf<button class="btn btn-primary" type="submit">施術登録</button></form></p></li><br>
 				<li><p><form method="GET" action="/workers/ShowGoodsList">@csrf<button class="btn btn-primary" type="submit">商品登録</button></form></p></li><br>
-				<li><p><form method="GET" action="/workers/ShowBlanchesList">@csrf<button class="btn btn-primary" type="submit">支店登録</button></form></p></li><br>
+				<li><p><form method="GET" action="/workers/ShowBranchList">@csrf<button class="btn btn-primary" type="submit">支店登録</button></form></p></li><br>
                     </ul>
                     </div>
                 </div>

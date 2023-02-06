@@ -16,6 +16,11 @@ return new class extends Migration
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
+            $table->string('serial_branch')->unique()->comment('シリアル');
+            $table->string('name_branch',100)->comment('支店名');
+            $table->string('address_branch',200)->nullable()->comment('支店住所');
+            $table->string('phone_branch',100)->comment('電話番号');
         });
     }
 
