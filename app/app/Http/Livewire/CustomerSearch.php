@@ -18,7 +18,7 @@ class CustomerSearch extends Component
 	public $sort_key_p = '',$asc_desc_p="",$serch_key_p="";
 	public $kensakukey="";
 	public $count = 0;
-
+	
 	public function increment()
     {
         $this->count++;
@@ -56,9 +56,6 @@ class CustomerSearch extends Component
 
     public function render()
     {
-        //$userQuery = User::query();
-        //$userQuery = User::paginate(10);
-
 		if(isset($_SERVER['HTTP_REFERER'])){
 			OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
 		}
@@ -120,7 +117,6 @@ class CustomerSearch extends Component
 				->orwhere('email','like',$key)
 				->orwhere('phone','like',$key);
 		}
-		//print "key=".$key."<br>";
 		$targetSortKey="";
 		if(session('sort_key')<>""){
 			$targetSortKey=session('sort_key');

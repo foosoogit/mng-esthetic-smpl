@@ -15,7 +15,6 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContractDetail;
 use App\Models\VisitHistory;
-//use App\Http\Livewire\LivewireTest;
 use App\Models\Branch;
 
 class StaffController extends Controller
@@ -44,9 +43,6 @@ class StaffController extends Controller
 		}else{
 			$targetSerial=$request->serial_branch;
 		}
-		//print "request->serial_branch=".$request->serial_branch."<br>";
-		//print "serialMax=".$serialMax."<br>";
-		//print "targetSerial=".$targetSerial."<br>";
 		$targetData=[
 			'serial_branch' => $targetSerial,
 			'name_branch' => $request->name_branch,
@@ -664,9 +660,9 @@ class StaffController extends Controller
 	}
 
 	public function ShowMenuCustomerManagement(){
+		OtherFunc::make_html_branch_cbox();
 		session(['fromPage' => 'MenuCustomerManagement']);
 		session(['fromMenu' => 'MenuCustomerManagement']);
-		$header="";$slot="";
 		session(['fromMenu' => 'MenuCustomerManagement']);
 		session(['targetYear' => date('Y')]);
 		$targetYear=session('targetYear');
@@ -685,13 +681,18 @@ class StaffController extends Controller
 		$default_customers=OtherFunc::make_htm_get_default_user();
 		$not_coming_customers=OtherFunc::make_htm_get_not_coming_customer();
 		$htm_kesanMonth=OtherFunc::make_html_month_slct(initConsts::KesanMonth());
-		$csrf="csrf";
+		$htm_branch_cbox=OtherFunc::make_html_branch_cbox();
+		$csrf="csrf";$header="";$slot="";
 		session(['GoBackPlace' => '../ShowMenuCustomerManagement']);
-		return view('staff.MenuCustomerManagement',compact("header","slot","html_year_slct","html_month_slct","DefaultUsersInf","not_coming_customers","default_customers",'htm_kesanMonth'));
+		return view('staff.MenuCustomerManagement',compact("header","slot","html_year_slct","html_month_slct","DefaultUsersInf","not_coming_customers","default_customers",'htm_kesanMonth','htm_branch_cbox'));
+	}
+
+	public function ShowTargetUser($serial_user){
+		$users=User::where('created_at')->paginate(15);
+		return view('staff.UserList',compact('users'));
 	}
 
 	public function ShowUserList(){
-
 		$users=User::orderBy('created_at')->paginate(15);
 		return view('staff.UserList',compact('users'));
 	}

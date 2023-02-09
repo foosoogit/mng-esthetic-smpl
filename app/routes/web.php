@@ -24,25 +24,12 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-/*
-Route::get('/UserList', function () {
-    return view('staff.UserList');
-    //return view('clist');
-    //return view('welcome');
-    //return view('livewire.livewire-test');
-});
-*/
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-//Route::view('/livewire', [App\Http\Livewire\Counter::class]);
-//Route::get('/livewire_test', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement']);
 Route::view('/staff/login', 'staff/login');
 Route::post('/staff/login', [App\Http\Controllers\Staff\LoginController::class,'login']);
 Route::view('/staff/register', 'staff/register');
 Route::post('/staff/register', [App\Http\Controllers\Staff\RegisterController::class, 'register']);
-//Route::get('/staff/home', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement']);
-//Route::prefix('staff')->group(['middleware' => 'auth:staff'], function(){
-//Route::prefix('staff')->group(['middleware' => ['auth:staff'], function(){
-//Route::get('/menuStaff', [\App\Http\Controllers\StaffController::class,'ShowMenuCustomerManagement'])->name('StaffMenu');
 Route::group(['middleware' => ['auth:staff']], function(){
     Route::post('/workers/upsertBranch', [\App\Http\Controllers\StaffController::class,'upsertBranch'],function(Request $request){});
     Route::get('/workers/ShowBranchRegistration/{serial_branch}', [\App\Http\Controllers\StaffController::class,'ShowBranchRegistration'],function($serial_branch){});
@@ -50,10 +37,9 @@ Route::group(['middleware' => ['auth:staff']], function(){
     Route::get('/workers/ShowBranchList', [\App\Http\Controllers\StaffController::class,'ShowBranchList']);
     Route::get('/workers/ShowDailyReport', DailyReport::class);
 	Route::post('/workers/ShowDailyReport', DailyReport::class);
+
     Route::get('/customers/ShowCustomersList_livewire_from_top_menu/{target_user_serial}', [\App\Http\Livewire\CustomerSearch::class,'search_from_top_menu'],function($target_user_serial){});
 	Route::post('/customers/ShowCustomersList_livewire_from_top_menu', CustomerSearch::class,function(Request $request){});
-
-    Route::post('/customers/ShowCustomersList_livewire_from_top_menu', CustomerSearch::class,function(Request $request){});
 
     Route::post('/customers/UserList', function () {
         return view('staff.UserList');

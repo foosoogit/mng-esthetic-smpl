@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('branches', function (Blueprint $table) {
-            //$table->string('postal',15)->nullable()->after('name_branch')->comment('郵便番号');
-            //$table->string('email')->nullable();
+        Schema::table('staffs', function (Blueprint $table) {
+            $table->string('selected_branch',10)->nullable()->comment('選択した店舗');
         });
     }
 
@@ -26,7 +25,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('branches', function (Blueprint $table) {
+        Schema::table('staffs', function (Blueprint $table) {
             //
         });
     }

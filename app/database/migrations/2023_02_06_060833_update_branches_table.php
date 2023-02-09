@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::table('branches', function (Blueprint $table) {
             $table->string('open_date',12)->nullable()->comment('開院日');
+            $table->string('email')->nullable();
+            $table->string('postal',15)->nullable()->after('name_branch')->comment('郵便番号');
+            $table->text('note')->nullable()->comment('備考');
         });
     }
 

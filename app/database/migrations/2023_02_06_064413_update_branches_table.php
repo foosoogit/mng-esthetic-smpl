@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('branches', function (Blueprint $table) {
-            $table->text('note')->nullable()->comment('備考');
+            //$table->text('note')->nullable()->comment('備考');
         });
     }
 

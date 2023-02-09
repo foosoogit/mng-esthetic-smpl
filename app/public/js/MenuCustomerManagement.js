@@ -1,4 +1,65 @@
-﻿function save_kessan_month(obj){
+﻿function branch_cbox_manage(obj){
+	/*
+	//alert("TEST2");
+	branch_cbx_all
+	var branch_cbox_obj = document.getElementsByName("branch_cbx");
+	alert(branch_cbox_obj[0].checked);
+	var all_ck_flg=true;
+	
+	if(obj==branch_cbox_obj[0]){
+		if(branch_cbox_obj[0]){
+			for (let i = 1; i < branch_cbox_obj.length; i++) {
+				branch_cbox_obj[i].checked= true;
+				}
+			}
+		}else{
+
+	}
+	if(branch_cbox_obj[0].checked==true){
+		for (let i = 1; i < branch_cbox_obj.length; i++) {
+				all_ck_flg=true;
+			}
+	}else{
+		for (let i = 1; i < branch_cbox_obj.length; i++) {
+			if(branch_cbox_obj[i].checked != true){
+				all_ck_flg=false;
+				branch_cbox_obj[0].checked=false;
+				break;
+			}
+		}
+		if(all_ck_flg==true){
+			branch_cbox_obj[0].checked=true;
+		}else{
+			branch_cbox_obj[0].checked=false;
+		}
+	}
+	*/
+	/*
+	if(obj==branch_cbox_obj[0]){
+		if(branch_cbox_obj[0].checked == true){
+			//alert("true2");
+			alert(branch_cbox_obj.length);
+			for (let i = 1; i < branch_cbox_obj.length; i++) {
+				branch_cbox_obj[i].checked=true;
+			}
+		}else{
+			var all_ck_flg=true;
+			for (let i = 1; i < branch_cbox_obj.length; i++) {
+				if(branch_cbox_obj[i].checked != true){
+					all_ck_flg=false;
+					break;
+				}
+			}
+			if(all_ck_flg==true){
+				branch_cbox_obj[0].checked=true;
+			}
+		}
+	}
+	alert("TEST1");
+	*/
+}
+
+function save_kessan_month(obj){
 	var kesan_month=obj.value;
 	//alert(kesan_month);
 
@@ -21,5 +82,4 @@
 		alert(errorThrown);	
 		alert('エラー');
 	});
-
 }

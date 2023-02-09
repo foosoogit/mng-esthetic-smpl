@@ -10,9 +10,27 @@ use App\Http\Controllers\InitConsts;
 use DateInterval;
 use DatePeriod;
 use App\Models\TreatmentContent;
+use App\Models\Branch;
+use Illuminate\Support\Facades\Auth;
 
 class OtherFunc extends Controller
 {
+	public static function make_html_branch_cbox(){
+		$branches=Branch::all();
+		$selected_branch=Auth::user()->selected_branch;
+		$cked="";
+		$htm_branch_cbox='<div class="form-group">';
+		//if($selected_branch=="all"){$cked="checked"	;}
+		//$htm_branch_cbox.='&nbsp;<input class="form-check-input" name="branch_cbx" id="branch_cbx_all" type="checkbox" value="all" onchange="branch_cbox_manage(this);" '.$cked.' /><label style="font-size: larger;vertical-align:middle;" for="branch_cbx_all">&nbsp;全店舗</label></label>&nbsp&nbsp;';
+		foreach($branches as $branch){
+			$cked="";
+			if($selected_branch==$branch->serial_branch){$cked="checked";}
+			$htm_branch_cbox.='&nbsp;<input class="form-check-input" name="branch_cbx" id="branch_cbx_'.$branch->serial_branch.'" type="checkbox" value="'.$branch->serial_branch.'" onchange="branch_cbox_manage(this);" '.$cked.' />&nbsp;<label style="font-size: larger;vertical-align:middle;" for="branch_cbx_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
+		}
+		$htm_branch_cbox.='</div>';
+		return $htm_branch_cbox;
+	}
+	
 	public static function make_html_card_company_slct($targetCompany){
 		$cmp="";
 		$cmps=DB::table('configrations')->select('value1')->where('subject', '=', 'Card Company')->get();
@@ -208,7 +226,6 @@ class OtherFunc extends Controller
 					$targetNameHtm.='・<input type="submit" formaction="/customers/ShowInpRecordVisitPayment/'.$value->serial_keiyaku.'/'.$value->serial_user.'" name="btn_serial" value="'.$terget_user->name_sei.' '.$terget_user->name_mei.'">&nbsp';
 				}
 			}
-			
 		}
 		return $targetNameHtm;
 	}
@@ -247,7 +264,6 @@ class OtherFunc extends Controller
 	            if($era_year === 1) {
 	                return $era_name .'元年';
 	            }
-	
 	            return $era_name . $era_year;
 	        }
 	    }
