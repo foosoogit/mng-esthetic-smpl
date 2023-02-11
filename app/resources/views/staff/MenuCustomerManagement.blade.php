@@ -12,17 +12,19 @@
                                 {{ session('status') }}
                             </div>
                         @endif
-						<p>{!!$htm_branch_cbox!!}</p>
+						{{--<p>{!!$htm_branch_cbox!!}</p>--}}
+						{{--<form wire:submit.prevent="select_branch">@csrf--}}
+						<p><livewire:select-branch-manage></p>
+						{{--<input type="hidden" value="hidden" name="hdn" wire:model="post.hdn">
+						</form>
 						<form method="GET" action="/customers/UserList">@csrf
 							<button class="btn btn-primary" type="submit" >顧客一覧</button>&nbsp;修正・新規登録・契約
 						</form>
 						支払い不履行者<br>
 						<span style="color:red;">
-							{{--
 							<form method="POST" action="/customers/ShowCustomersList_livewire_from_top_menu">@csrf
 								{!!$default_customers!!}
 							</form>
-							--}}
 							<form method="POST" action="/customers/UserList">@csrf
 								<livewire:menu-customer>
 							</form>
@@ -31,6 +33,7 @@
 						<form method="GET">@csrf
 							{!!$not_coming_customers!!}
 						</form><br>
+						--}}
 						<form method="GET" action="/customers/ShowInputCustomer">@csrf<button class="btn btn-primary" type="submit" value="fromMenu" name="insertCustomerFromMenu">顧客新規登録</button>
 						</form><br>
                         <p><form method="GET" action="/customers/ShowContractList/all">@csrf<button class="btn btn-primary" type="submit">契約一覧</button>&nbsp;修正・新規登録・契約</form></p><br>

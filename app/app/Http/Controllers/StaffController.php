@@ -660,7 +660,7 @@ class StaffController extends Controller
 	}
 
 	public function ShowMenuCustomerManagement(){
-		OtherFunc::make_html_branch_cbox();
+		OtherFunc::make_html_branch_rdo();
 		session(['fromPage' => 'MenuCustomerManagement']);
 		session(['fromMenu' => 'MenuCustomerManagement']);
 		session(['fromMenu' => 'MenuCustomerManagement']);
@@ -681,7 +681,7 @@ class StaffController extends Controller
 		$default_customers=OtherFunc::make_htm_get_default_user();
 		$not_coming_customers=OtherFunc::make_htm_get_not_coming_customer();
 		$htm_kesanMonth=OtherFunc::make_html_month_slct(initConsts::KesanMonth());
-		$htm_branch_cbox=OtherFunc::make_html_branch_cbox();
+		$htm_branch_cbox=OtherFunc::make_html_branch_rdo();
 		$csrf="csrf";$header="";$slot="";
 		session(['GoBackPlace' => '../ShowMenuCustomerManagement']);
 		return view('staff.MenuCustomerManagement',compact("header","slot","html_year_slct","html_month_slct","DefaultUsersInf","not_coming_customers","default_customers",'htm_kesanMonth','htm_branch_cbox'));

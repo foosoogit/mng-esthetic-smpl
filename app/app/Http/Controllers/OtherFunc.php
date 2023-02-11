@@ -12,25 +12,93 @@ use DatePeriod;
 use App\Models\TreatmentContent;
 use App\Models\Branch;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Staff;
 
 class OtherFunc extends Controller
 {
-	public static function make_html_branch_cbox(){
+	public static function make_html_branch_rdo(){
 		$branches=Branch::all();
-		$selected_branch=Auth::user()->selected_branch;
-		$cked="";
-		$htm_branch_cbox='<div class="form-group">';
-		//if($selected_branch=="all"){$cked="checked"	;}
-		//$htm_branch_cbox.='&nbsp;<input class="form-check-input" name="branch_cbx" id="branch_cbx_all" type="checkbox" value="all" onchange="branch_cbox_manage(this);" '.$cked.' /><label style="font-size: larger;vertical-align:middle;" for="branch_cbx_all">&nbsp;全店舗</label></label>&nbsp&nbsp;';
-		foreach($branches as $branch){
-			$cked="";
-			if($selected_branch==$branch->serial_branch){$cked="checked";}
-			$htm_branch_cbox.='&nbsp;<input class="form-check-input" name="branch_cbx" id="branch_cbx_'.$branch->serial_branch.'" type="checkbox" value="'.$branch->serial_branch.'" onchange="branch_cbox_manage(this);" '.$cked.' />&nbsp;<label style="font-size: larger;vertical-align:middle;" for="branch_cbx_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
+		if(session('target_branch_serial')==""){
+			$selected_branch=Auth::user()->selected_branch;
+		}else{
+			$selected_branch=session('target_branch_serial');
 		}
-		$htm_branch_cbox.='</div>';
+		$cked="";
+		if($selected_branch=="all"){$cked="checked";}
+		$htm_branch_cbox='<div class="form-group"><fieldset>';
+		//if($selected_branch=="all"){$cked="checked"	;}
+		//$htm_branch_cbox.='&nbsp;<input class="radio-inline__input" name="branch_cbx" id="branch_rdo_all" type="radio" value="all" onchange="branch_cbox_manage(this);" '.$cked.' /><label style="radio-inline__label;font-size: larger;vertical-align:middle;" for="branch_cbx_all">&nbsp;全店舗</label></label>&nbsp&nbsp;';
+		$branchSerial="'all'";
+		$htm_branch_cbox.='&nbsp;<input wire:click="select_branch('.$branchSerial.')" name="branch_rdo" id="branch_rdo_all" type="radio" value="all" onchange="branch_cbox_manage(this);" '.$cked.' /><label class="label" for="branch_rdo_all">&nbsp;全店舗</label></label>&nbsp&nbsp;';
+		foreach($branches as $branch){
+			$cked="";$branchSerial="";
+			if($selected_branch==$branch->serial_branch){$cked="checked";}
+			$branchSerial="'".$branch->serial_branch."'";
+			//$htm_branch_cbox.='&nbsp;<input class="form-check-input" name="branch_cbx" id="branch_cbx_'.$branch->serial_branch.'" type="checkbox" value="'.$branch->serial_branch.'" onchange="get_target_branch();" '.$cked.' />&nbsp;<label style="font-size: larger;vertical-align:middle;" for="branch_cbx_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
+			$htm_branch_cbox.='&nbsp;<input wire:click="select_branch('.$branchSerial.')"  name="branch_rdo" id="branch_rdo_'.$branch->serial_branch.'" type="radio" value="'.$branch->serial_branch.'" '.$cked.' />&nbsp;<label class="label" for="branch_rdo_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
+			//$htm_branch_cbox.='&nbsp;<input wire:click="select_branch('.$branchSerial.')" class="form-check-input" name="branch_cbx" id="branch_cbx_'.$branch->serial_branch.'" type="radio" value="'.$branch->serial_branch.'" '.$cked.' />&nbsp;<label style="font-size: larger;vertical-align:middle;" for="branch_cbx_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
+			//$htm_branch_cbox.='&nbsp;<input wire:click="select_branch('.$branch->serial_branch.')" class="form-check-input" name="branch_cbx" id="branch_cbx_'.$branch->serial_branch.'" type="checkbox" value="'.$branch->serial_branch.'" onchange="branch_cbox_manage(this);" '.$cked.' />&nbsp;<label style="font-size: larger;vertical-align:middle;" for="branch_cbx_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
+		}
+		$htm_branch_cbox.='</fieldset></div>';
 		return $htm_branch_cbox;
 	}
-	
+
+	public static function make_htm_get_not_coming_customer(){
+		$today = new DateTime('now');
+		if(session('target_branch_serial')=="all"){
+			$keyakukaisu=DB::table('contracts')
+					->where('cancel','=',null)
+					->where('how_to_pay','=','現金')
+					->get();
+		}else{
+			$keyakukaisu=DB::table('contracts')->leftJoin('users', 'contracts.serial_user', '=', 'users.serial_user')
+					->where('cancel','=',null)
+					->where('how_to_pay','=','現金')
+					->where('users.serial_branch','=',session('target_branch_serial'))
+					->get();
+		}
+		$targetName=array();$targetNameHtmFront=array();$targetNameHtmBack=array();
+		$targetNameHtm="";
+		foreach($keyakukaisu as $value){
+			$num_payed=DB::table('payment_histories')->where('serial_keiyaku','=',$value->serial_keiyaku)->count();
+			if($num_payed<$value->how_many_pay_genkin){
+				$payment_date_latest=DB::table('payment_histories')->where('serial_keiyaku','=',$value->serial_keiyaku)->max('date_payment');
+				$payment_date_latest_dt = new DateTime($payment_date_latest);
+				$diff = $today->diff($payment_date_latest_dt);
+				$interval_day=$diff->format('%a');
+				if($interval_day>30){
+					$terget_user=DB::table('users')->where('serial_user','=', $value->serial_user)->first();
+					$targetNameHtm.='<input type="submit" formaction="/customers/ShowInpRecordVisitPayment/'.$value->serial_keiyaku.'/'.$value->serial_user.'" name="btn_serial" value="'.$terget_user->name_sei.' '.$terget_user->name_mei.'">&nbsp';
+				}
+			}
+		}
+		return $targetNameHtm;
+	}
+
+	public static function make_htm_get_default_user(){
+		if(session('target_branch_serial')=="all"){
+			$DefaultUsersInf=PaymentHistory::leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')
+			->where('payment_histories.how_to_pay','=', 'default')
+			->whereIn('users.serial_user', function ($query) {
+				$query->select('contracts.serial_user')->from('contracts')->where('contracts.cancel','=', null);
+			})
+			->distinct()->select('name_sei','name_mei','payment_histories.serial_user')->get();
+		}else{
+			$DefaultUsersInf=PaymentHistory::leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')
+			->where('payment_histories.how_to_pay','=', 'default')
+			->where('users.serial_branch','=', session('target_branch_serial'))
+			->whereIn('users.serial_user', function ($query) {
+				$query->select('contracts.serial_user')->from('contracts')->where('contracts.cancel','=', null);
+			})
+			->distinct()->select('name_sei','name_mei','payment_histories.serial_user')->get();
+		}
+		$targetNameHtm="";
+		foreach($DefaultUsersInf as $value){
+			$targetNameHtm.='<button type="submit" name="btn_serial" value="'.$value->serial_user.'">'.$value->name_sei.' '.$value->name_mei.'&nbsp;</button>';
+		}
+		return $targetNameHtm;
+	}
+		
 	public static function make_html_card_company_slct($targetCompany){
 		$cmp="";
 		$cmps=DB::table('configrations')->select('value1')->where('subject', '=', 'Card Company')->get();
@@ -188,46 +256,6 @@ class OtherFunc extends Controller
 			$htm_month_slct.='<option value="'.$i.'" '.$sct.'>'.$i.'月</option>';
 		}
 		return $htm_month_slct;
-	}
-
-	public static function make_htm_get_default_user(){
-		$DefaultUsersInf=PaymentHistory::leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')
-			->where('payment_histories.how_to_pay','=', 'default')
-			->whereIn('users.serial_user', function ($query) {
-				$query->select('contracts.serial_user')->from('contracts')->where('contracts.cancel','=', null);
-			})
-			->distinct()->select('name_sei','name_mei','payment_histories.serial_user')->get();
-		$targetNameHtm="";
-		foreach($DefaultUsersInf as $value){
-			$targetNameHtm.='<button type="submit" name="btn_serial" value="'.$value->serial_user.'">'.$value->name_sei.' '.$value->name_mei.'&nbsp;</button>';
-		}
-		return $targetNameHtm;
-	}
-
-	public static function make_htm_get_not_coming_customer(){
-		$today = new DateTime('now');
-		$keyakukaisu=DB::table('contracts')
-			->where('cancel','=',null)
-			->where('how_to_pay','=','現金')
-			->get();
-		$targetName=array();$targetNameHtmFront=array();$targetNameHtmBack=array();
-		$targetNameHtm="";
-		foreach($keyakukaisu as $value){
-			$num_payed=DB::table('payment_histories')->where('serial_keiyaku','=',$value->serial_keiyaku)->count();
-			if($num_payed<$value->how_many_pay_genkin){
-				$payment_date_latest=DB::table('payment_histories')->where('serial_keiyaku','=',$value->serial_keiyaku)->max('date_payment');
-				$payment_date_latest_dt = new DateTime($payment_date_latest);
-				$diff = $today->diff($payment_date_latest_dt);
-				$interval_day=$diff->format('%a');
-				if($interval_day>30){
-					$terget_user=DB::table('users')->where('serial_user','=', $value->serial_user)->first();
-					//DB::table('users')->where('serial_user','=', $value->serial_user)->dd();
-					//print_r($terget_user);
-					$targetNameHtm.='・<input type="submit" formaction="/customers/ShowInpRecordVisitPayment/'.$value->serial_keiyaku.'/'.$value->serial_user.'" name="btn_serial" value="'.$terget_user->name_sei.' '.$terget_user->name_mei.'">&nbsp';
-				}
-			}
-		}
-		return $targetNameHtm;
 	}
 
 	public static function make_html_slct_birth_year_list($targetYear){

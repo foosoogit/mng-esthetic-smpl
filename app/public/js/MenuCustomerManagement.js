@@ -1,4 +1,13 @@
-﻿function branch_cbox_manage(obj){
+﻿function get_target_branch(){
+	//alert(document.getElementsByName("target_branch").value);
+	alert("target_branch3");
+	document.getElementsByName("target_branch_hdn").value="get_target_branch";
+	Livewire.emitTo('select-branch-manage', 'select_branch','get_target_branch');
+	alert("target_branch4");
+	//Livewire.emit(select_branch('emit'));
+}
+
+function branch_cbox_manage(obj){
 	/*
 	//alert("TEST2");
 	branch_cbx_all

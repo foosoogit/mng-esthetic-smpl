@@ -3,3 +3,9 @@ input[type=checkbox] {
 	margin: 0 6px 0 0;
     vertical-align:middle;
 }
+
+input[type=radio] {
+	display: none; /* ラジオボタンを非表示にする */
+}
+
+.danraku {line-height: 200%;}
