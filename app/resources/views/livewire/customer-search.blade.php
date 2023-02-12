@@ -1,16 +1,4 @@
-{{--
-	@extends('layouts.staff')
-	@section('content')
---}}
 <div>
-{{--
-{{$title}}
-<div><button type="button" wire:click="ct">change</button></div>
-<div><button type="button" wire:keydown="ct" class="btn btn-primary">change2</button></div>
---}}
-{{--<button wire:click="increment">+</button>
-	<h1>{{ $count }}</h1> 
-	--}}
 <script src="{{  asset('/js/ListCustomer.js') }}" defer></script>
 <section>
 	<div class="containor">
@@ -30,18 +18,19 @@
 						<div class="col-auto">
 							<form method="GET" action="/customers/ShowInputCustomer">@csrf
 								<button class="btn btn-primary" type="submit" name="CustomerListCreateBtn" value="CustomerList">新規顧客登録</button>
-							
 							</form>	
 						</div>
 					</div>
 					<div class="card-header">
 						<h3>顧客一覧</h3>
 					</div>
-					<div class="row justify-content-center">
+					
+					<div class="row justify-content-center align-middle">
+						<div class="col-auto">{!!$htm_branch_cbox!!}</div>
 						<div class="col-auto"><button type="button" wire:click="searchClear() onclick="document.getElementById('kensakukey_txt').value=''">解除</button></div> 
-						<div class="col-auto"><input type="text" name="kensakukey_txt" id="kensakukey_txt" class="bg-white-500 border-solid pxtext-black rounded px-3 py-1" wire:model.defer="kensakukey"></div>
+						<div class="col-auto"><input type="text" name="kensakukey_txt" id="kensakukey_txt" class="form-control col-md-5" wire:model.defer="kensakukey"></div>
 						<div class="col-auto"><button type="button" name="SerchBtn" id="SerchBtn" wire:click="search()">検索</button></div>
-					</div>	
+						</div>
 					<div class="card-body">
 					<table class="table-auto" border-solid>
 						<thead>

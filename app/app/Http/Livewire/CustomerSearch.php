@@ -10,6 +10,8 @@ use Livewire\WithPagination;
 use App\Http\Controllers\InitConsts;
 use Illuminate\Http\Request;
 use App\Http\Controllers\OtherFunc;
+use App\Models\Staff;
+use Illuminate\Support\Facades\Auth;
 if(!isset($_SESSION)){session_start();}
 
 class CustomerSearch extends Component
@@ -18,11 +20,21 @@ class CustomerSearch extends Component
 	public $sort_key_p = '',$asc_desc_p="",$serch_key_p="";
 	public $kensakukey="";
 	public $count = 0;
+	public static $serial_branch = '';
+	public static $key="";
 	
 	public function increment()
     {
         $this->count++;
     }
+
+	public function select_branch($target_serial_branch){
+        session(['target_branch_serial' => $target_serial_branch]);
+        self::$serial_branch=$target_serial_branch;
+        Staff::where('serial_staff', '=', Auth::user()->serial_staff)->update([
+            'selected_branch' => session('target_branch_serial'),
+        ]);
+	}
 
 	public function searchClear(){
 		$this->serch_key_p="";
@@ -103,7 +115,39 @@ class CustomerSearch extends Component
 		if(session('serchKey')=='zankin'){
 			$userQuery =$userQuery->where('zankin','>','0');
 		}else{
-			$key="%".session('serchKey')."%";
+			self::$key="%".session('serchKey')."%";
+			//$key="%".session('serchKey')."%";
+			if(session('target_branch_serial')=='all'){
+				$userQuery =$userQuery->where('serial_user','like',self::$key)
+				->orwhere('name_sei','like',self::$key)
+				->orwhere('name_mei','like',self::$key)
+				->orwhere('name_sei_kana','like',self::$key)
+				->orwhere('name_mei_kana','like',self::$key)
+				->orwhere('birth_year','like',self::$key)
+				->orwhere('birth_month','like',self::$key)
+				->orwhere('birth_day','like',self::$key)
+				->orwhere('address_region','like',self::$key)
+				->orwhere('address_locality','like',self::$key)
+				->orwhere('email','like',self::$key)
+				->orwhere('phone','like',self::$key);
+			}else{
+				$key=$userQuery->where('serial_branch','=',session('target_branch_serial'))
+					->Where(function($query) {
+					$query->orwhere('name_sei','like',self::$key)
+					->orwhere('name_mei','like',self::$key)
+					->orwhere('name_sei_kana','like',self::$key)
+					->orwhere('name_mei_kana','like',self::$key)
+					->orwhere('birth_year','like',self::$key)
+					->orwhere('birth_month','like',self::$key)
+					->orwhere('birth_day','like',self::$key)
+					->orwhere('address_region','like',self::$key)
+					->orwhere('address_locality','like',self::$key)
+					->orwhere('email','like',self::$key)
+					->orwhere('phone','like',self::$key);
+				});
+			}
+		}
+			/*
 			$userQuery =$userQuery->where('serial_user','like',$key)
 				->orwhere('name_sei','like',$key)
 				->orwhere('name_mei','like',$key)
@@ -116,7 +160,12 @@ class CustomerSearch extends Component
 				->orwhere('address_locality','like',$key)
 				->orwhere('email','like',$key)
 				->orwhere('phone','like',$key);
-		}
+			*/
+		
+		//if(session('target_branch_serial')<>'all'){
+			//$userQuery =$userQuery->where('serial_branch','=',session('target_branch_serial'));
+			//$userQuery =$userQuery->where('serial_branch','=','B_001');
+		//}
 		$targetSortKey="";
 		if(session('sort_key')<>""){
 			$targetSortKey=session('sort_key');
@@ -176,15 +225,16 @@ class CustomerSearch extends Component
 		*/
 		//$userQuery = User::query();
         $userQuery =$userQuery->orderBy('name_sei_kana', 'asc');
+		//dd($userQuery);
         $targetPage=null;
+		//dd($userQuery);
         $users=$userQuery->paginate($perPage = initConsts::DdisplayLineNumCustomerList(),['*'], 'page',$targetPage);
 		$totalZankin=Contract::sum('keiyaku_kingaku')-PaymentHistory::sum('amount_payment');
        // $users=User::paginate($perPage = initConsts::DdisplayLineNumCustomerList(),['*'], 'page',$targetPage);
         $header="";$slot="";
-        //$totalZankin=Contract::sum('keiyaku_kingaku')-PaymentHistory::sum('amount_payment');
-        //$totalZankin=0;
+		$htm_branch_cbox=OtherFunc::make_html_branch_rdo();
         //return view('livewire.livewire-test2',compact('users','header','slot','totalZankin','from_place','target_day','from_place'));
-		return view('livewire.customer-search',compact('users','header','slot','totalZankin','from_place','target_day','from_place'));
+		return view('livewire.customer-search',compact('users','header','slot','totalZankin','from_place','target_day','from_place','htm_branch_cbox'));
     }
     /*
 	use WithPagination;

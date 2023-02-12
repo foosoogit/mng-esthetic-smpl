@@ -26,18 +26,13 @@ class OtherFunc extends Controller
 		$cked="";
 		if($selected_branch=="all"){$cked="checked";}
 		$htm_branch_cbox='<div class="form-group"><fieldset>';
-		//if($selected_branch=="all"){$cked="checked"	;}
-		//$htm_branch_cbox.='&nbsp;<input class="radio-inline__input" name="branch_cbx" id="branch_rdo_all" type="radio" value="all" onchange="branch_cbox_manage(this);" '.$cked.' /><label style="radio-inline__label;font-size: larger;vertical-align:middle;" for="branch_cbx_all">&nbsp;全店舗</label></label>&nbsp&nbsp;';
 		$branchSerial="'all'";
 		$htm_branch_cbox.='&nbsp;<input wire:click="select_branch('.$branchSerial.')" name="branch_rdo" id="branch_rdo_all" type="radio" value="all" onchange="branch_cbox_manage(this);" '.$cked.' /><label class="label" for="branch_rdo_all">&nbsp;全店舗</label></label>&nbsp&nbsp;';
 		foreach($branches as $branch){
 			$cked="";$branchSerial="";
 			if($selected_branch==$branch->serial_branch){$cked="checked";}
 			$branchSerial="'".$branch->serial_branch."'";
-			//$htm_branch_cbox.='&nbsp;<input class="form-check-input" name="branch_cbx" id="branch_cbx_'.$branch->serial_branch.'" type="checkbox" value="'.$branch->serial_branch.'" onchange="get_target_branch();" '.$cked.' />&nbsp;<label style="font-size: larger;vertical-align:middle;" for="branch_cbx_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
 			$htm_branch_cbox.='&nbsp;<input wire:click="select_branch('.$branchSerial.')"  name="branch_rdo" id="branch_rdo_'.$branch->serial_branch.'" type="radio" value="'.$branch->serial_branch.'" '.$cked.' />&nbsp;<label class="label" for="branch_rdo_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
-			//$htm_branch_cbox.='&nbsp;<input wire:click="select_branch('.$branchSerial.')" class="form-check-input" name="branch_cbx" id="branch_cbx_'.$branch->serial_branch.'" type="radio" value="'.$branch->serial_branch.'" '.$cked.' />&nbsp;<label style="font-size: larger;vertical-align:middle;" for="branch_cbx_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
-			//$htm_branch_cbox.='&nbsp;<input wire:click="select_branch('.$branch->serial_branch.')" class="form-check-input" name="branch_cbx" id="branch_cbx_'.$branch->serial_branch.'" type="checkbox" value="'.$branch->serial_branch.'" onchange="branch_cbox_manage(this);" '.$cked.' />&nbsp;<label style="font-size: larger;vertical-align:middle;" for="branch_cbx_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
 		}
 		$htm_branch_cbox.='</fieldset></div>';
 		return $htm_branch_cbox;

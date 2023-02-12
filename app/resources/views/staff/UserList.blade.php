@@ -17,6 +17,36 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <!-- Styles -->
+    <style>
+        input[type=radio] {
+            display: none; /* ラジオボタンを非表示にする */
+        }
+        input[type="radio"]:checked + label {
+            background: #31A9EE;/* マウス選択時の背景色を指定する */
+            color: #ffffff; /* マウス選択時のフォント色を指定する */
+        }
+        .label:hover {
+            background-color: #E2EDF9; /* マウスオーバー時の背景色を指定する */
+        }
+        .label {
+            display: block; /* ブロックレベル要素化する */
+            float: left; /* 要素の左寄せ・回り込を指定する */
+            margin: 5px; /* ボックス外側の余白を指定する */
+            width: 120px; /* ボックスの横幅を指定する */
+            height: 35px; /* ボックスの高さを指定する */
+            /*padding-top: -50px;*/
+            padding-left: 5px; /* ボックス内左側の余白を指定する */
+            padding-right: 5px; /* ボックス内御右側の余白を指定する */
+            color: #b20000; /* フォントの色を指定 */
+            text-align: center; /* テキストのセンタリングを指定する */
+            line-height: 45px; /* 行の高さを指定する */
+            cursor: pointer; /* マウスカーソルの形（リンクカーソル）を指定する */
+            border: 2px solid #006DD9;/* ボックスの境界線を実線で指定する */
+            border-radius: 5px; /* 角丸を指定する */
+            /*font-size: larger;*/
+            vertical-align:middle;
+        }
+    </style>
     @livewireStyles
 </head>
 <body>
