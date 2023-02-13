@@ -15,6 +15,7 @@
 						<button type="submit" name="target_date" class="bg-blue-500 text-white rounded px-3 py-1">月報に戻る</button>
 					</form>
 				@endif
+				<livewire:select-branch-manage>
 				<div class="font-semibold text-2xl text-slate-600">[日報]</div>
 					<div class="card-header">
 						<h3><form action="/workers/ShowDailyReport" method="POST" name="getTargetDate_fm" id="getTargetDate_fm">@csrf<input name="target_date" id="target_date" type="date" onchange="getTargetdata(this);" value="{{$today}}"/></form></h3>

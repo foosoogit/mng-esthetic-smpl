@@ -15,7 +15,7 @@ input,textarea{
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                <button class="bg-blue-500 text-white rounded px-3 py-1" type="button" onclick="location.href='{{$GoBackPlace}}'">戻る</button>
+					<div class="col-auto"><button class="btn btn-primary" type="button" onclick="location.href='{{$GoBackPlace}}'">戻る</button></div>
                     <form action="/customers/insertCustomer" method="POST" class="h-adr">
                     @csrf
                     <span class="p-country-name" style="display:none;">Japan</span>
@@ -27,6 +27,7 @@ input,textarea{
 				<span class="auto-style1">*</span><span class="font-semibold text-1xl text-slate-600">:必須項目</span>
 			@endif
 			<span class="auto-style1">*</span>入会日<input name="AdmissionDate" id="AdmissionDate" type="date" value="{{optional($target_user)->admission_date}}"/>
+			{!! $html_branch_rdo !!}
 			<p class="py-3">氏名</p><p style="text-indent:20px" class="py-1.5">
 			<span class="auto-style1">*</span>姓<input type="text" name="name_sei" id="name_sei" value="{{optional($target_user)->name_sei}}" class="bg-white-500 border-solid pxtext-black rounded px-3 py-1" tabindex="1" ></p>
                         <p style="text-indent:20px" class="py-1.5">
@@ -35,7 +36,19 @@ input,textarea{
 						<span class="auto-style1">*</span>セイ<input type="text" name="name_sei_kana"  id="name_sei_kana" value="{{ optional($target_user)->name_sei_kana  }}" class="bg-white-500 text-black rounded px-3 py-1" tabindex="3" ></p>
 						<p style="text-indent:20px" class="py-1.5">
 						<span class="auto-style1">*</span>メイ<input type="text" name="name_mei_kana"id="name_mei_kana" value="{{ optional($target_user)->name_mei_kana }}" class="bg-white-500 text-black rounded px-3 py-1" tabindex="4" ></p>
-						<span class="auto-style1">*</span>性別&nbsp;&nbsp;<label><input name="GenderRdo" type="radio" value="man"  {{optional($GenderRdo)['man']}}/>男</label>&nbsp;&nbsp;<label><input name="GenderRdo" type="radio" value="woman" {{optional($GenderRdo)['woman']}}/>女</label>&nbsp;&nbsp;<label><input name="GenderRdo" type="radio" value="free" {{optional($GenderRdo)['free']}}/>フリー</label>
+						<span class="auto-style1">*</span>性別&nbsp;&nbsp;
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" style="display: inline grid" name="GenderRdo" id="GenderMan" type="radio" value="man"  {{ optional($GenderRdo)['man'] }}/>
+								<label class="form-check-label" for="GenderMan">男</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" style="display: inline grid" name="GenderRdo" id="GenderWoman" type="radio" value="woman" {{optional($GenderRdo)['woman']}}/>
+								<label class="form-check-label" for="GenderWoman">女</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" style="display: inline grid" name="GenderRdo" id="GenderFree" type="radio" value="free" {{optional($GenderRdo)['free']}}/>
+								<label class="form-check-label" for="GenderFree">フリー</label>
+							</div>
 						<p class="py-3">生年月日<p style="text-indent:20px">
 						<select name="birt_year_slct" class="bg-white-500 text-black rounded px-3 py-1" tabindex="5">{!! $html_birth_year_slct !!}</select> 年
 						<select name="birth_month_slct" class="bg-white-500 text-black rounded px-3 py-1" tabindex="6">
@@ -148,7 +161,7 @@ input,textarea{
 						<input type="text" name="phone" id="phone" value="{{ optional($target_user)->phone }}" class="bg-white-500 text-black rounded px-3 py-2 bg-white-500 text-black rounded px-3 py-1" tabindex="13"></p>
                          何を見て当サロンに来られましたか？<br>
 			{!!$html_reason_coming!!}
-                        <p style="text-align: center"><button class="bg-blue-500 text-white rounded px-3 py-1" type="submit" id="SubmitBtn" value="{{$btnDisp}}" onclick="return validate();">{{$btnDisp}}</button></p>
+                        <p style="text-align: center"><button class="btn btn-primary" type="submit" id="SubmitBtn" value="{{$btnDisp}}" onclick="return validate();">{{$btnDisp}}</button></p>
 					</form>
 			<input name="TorokuMessageFlg" id="TorokuMessageFlg" type="hidden" value="{{$saveFlg}}"/>		
                 </div>

@@ -16,6 +16,18 @@ use App\Models\Staff;
 
 class OtherFunc extends Controller
 {
+	public static function make_html_branch_rdo_for_inp_customer($target_branch_serial){
+		$branches=Branch::all();
+		$htm_branch_cbox='<div class="form-group"><fieldset>';
+		foreach($branches as $branch){
+			$cked="";
+			if($target_branch_serial==$branch->serial_branch){$cked="checked";}
+			$branchSerial="'".$branch->serial_branch."'";
+			$htm_branch_cbox.='&nbsp;<input name="branch_rdo" id="branch_rdo_'.$branch->serial_branch.'" type="radio" value="'.$branch->serial_branch.'" '.$cked.' />&nbsp;<label class="label" for="branch_rdo_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
+		}
+		$htm_branch_cbox.='</fieldset></div>';
+		return $htm_branch_cbox;
+	}
 	public static function make_html_branch_rdo(){
 		$branches=Branch::all();
 		if(session('target_branch_serial')==""){

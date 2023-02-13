@@ -59,6 +59,9 @@ function validate(){
 	}else if($('#AdmissionDate').val()==""){
 		alert("入会日を入力して下さい。");
 		return false;
+	}else if($('#branch_rdo').val()==""){
+		alert("登録店舗を選択してください。");
+		return false;
 	}else{
 		//alert($('#phone').val());
 		//ax_check_phone_duplication(mladdress);

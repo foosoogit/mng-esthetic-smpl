@@ -198,7 +198,28 @@ class StaffController extends Controller
 			$html_reason_coming=OtherFunc::make_html_reason_coming_cbox("");
 			$GoBackPlace="../ShowMenuCustomerManagement";
 		}
-		return view('customers.CreateCustomer',compact("header","slot",'html_birth_year_slct',"target_user","selectedManth","selectedDay","selectedRegion","GoBackPlace","saveFlg","btnDisp","GenderRdo","html_reason_coming"));
+		$html_branch_rdo=OtherFunc::make_html_branch_rdo_for_inp_customer($target_user->serial_branch);
+		return view('customers.CreateCustomer',compact("header","slot",'html_birth_year_slct',"target_user","selectedManth","selectedDay","selectedRegion","GoBackPlace","saveFlg","btnDisp","GenderRdo","html_reason_coming","html_branch_rdo"));
+	}
+
+	public function ShowInputCustomer(Request $request){
+		session(['fromPage' => 'InputCustomer']);
+		session(['CustomerManage' => 'new']);
+		$header="";$slot="";
+		$html_birth_year_slct=OtherFunc::make_html_slct_birth_year_list("");
+		$html_birth_year_slct=trim($html_birth_year_slct);
+		$GoBackPlace="../ShowMenuCustomerManagement";
+		if(isset($request->CustomerListCreateBtn)){
+			$GoBackPlace="/customers/UserList";
+		}
+		setcookie('TorokuMessageFlg','false',time()+60);
+		$html_branch_rdo=OtherFunc::make_html_branch_rdo_for_inp_customer(null);
+		$GenderRdo=array();
+		$target_user="";$selectedManth=null;$selectedDay=null;$selectedRegion=null;
+		$saveFlg="false,".session('CustomerManage');$btnDisp="　登　録　";
+		$html_reason_coming="";
+		$html_reason_coming=OtherFunc::make_html_reason_coming_cbox("");
+		return view('customers.CreateCustomer',compact('header',"slot",'html_birth_year_slct',"target_user","selectedManth","selectedDay","selectedRegion","GoBackPlace","saveFlg","btnDisp","GenderRdo","html_reason_coming","html_branch_rdo"));
 	}
 
 	public function deleteCustomer($serial_user){
@@ -624,7 +645,9 @@ class StaffController extends Controller
 
 			'email' => $request->email,
 			'phone' => $request->phone,
-			'reason_coming'=>$reason_coming
+			'reason_coming'=>$reason_coming,
+
+			'serial_branch'=>$request->branch_rdo
 		];
 		User::upsert($targetData,['serial_user']);
 		setcookie('TorokuMessageFlg','true',time()+60);
@@ -695,24 +718,5 @@ class StaffController extends Controller
 	public function ShowUserList(){
 		$users=User::orderBy('created_at')->paginate(15);
 		return view('staff.UserList',compact('users'));
-	}
-	public function ShowInputCustomer(Request $request){
-		session(['fromPage' => 'InputCustomer']);
-		session(['CustomerManage' => 'new']);
-		$header="";$slot="";
-		$html_birth_year_slct=OtherFunc::make_html_slct_birth_year_list("");
-		$html_birth_year_slct=trim($html_birth_year_slct);
-		$GoBackPlace="../ShowMenuCustomerManagement";
-		if(isset($request->CustomerListCreateBtn)){
-			$GoBackPlace="/customers/UserList";
-		}
-		setcookie('TorokuMessageFlg','false',time()+60);
-
-		$GenderRdo=array();
-		$target_user="";$selectedManth=null;$selectedDay=null;$selectedRegion=null;
-		$saveFlg="false,".session('CustomerManage');$btnDisp="　登　録　";
-		$html_reason_coming="";
-		$html_reason_coming=OtherFunc::make_html_reason_coming_cbox("");
-		return view('customers.CreateCustomer',compact('header',"slot",'html_birth_year_slct',"target_user","selectedManth","selectedDay","selectedRegion","GoBackPlace","saveFlg","btnDisp","GenderRdo","html_reason_coming"));
 	}
 }

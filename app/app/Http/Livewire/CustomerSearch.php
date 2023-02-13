@@ -39,6 +39,7 @@ class CustomerSearch extends Component
 	public function searchClear(){
 		$this->serch_key_p="";
 		$this->kensakukey="";
+		//session(['target_branch_serial' => 'all']);
 		session(['serchKey' => '']);
 	}
 
