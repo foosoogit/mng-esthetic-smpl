@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\StaffController;
 use App\Http\Livewire\CustomerSearch;
-use App\Http\Livewire\DailyReport;
+//use App\Http\Livewire\DailyReport;
 use App\Http\Livewire\Counter;
 
 /*
@@ -35,8 +35,16 @@ Route::group(['middleware' => ['auth:staff']], function(){
     Route::get('/workers/ShowBranchRegistration/{serial_branch}', [\App\Http\Controllers\StaffController::class,'ShowBranchRegistration'],function($serial_branch){});
     Route::post('/workers/ShowBranchRegistration/{serial_branch}', [\App\Http\Controllers\StaffController::class,'ShowBranchRegistration'],function($serial_branch){});
     Route::get('/workers/ShowBranchList', [\App\Http\Controllers\StaffController::class,'ShowBranchList']);
-    Route::get('/workers/ShowDailyReport', DailyReport::class);
-	Route::post('/workers/ShowDailyReport', DailyReport::class);
+    //Route::get('/workers/ShowDailyReport', DailyReport::class);
+	//Route::post('/workers/ShowDailyReport', DailyReport::class);
+
+    Route::get('/workers/ShowDailyReport', function () {
+        return view('staff.DailyReport');
+    });
+    Route::post('/workers/ShowDailyReport', function () {
+        return view('staff.DailyReport');
+    });
+    //Route::get('/workers/ShowDailyReport', DailyReport::class);
 
     Route::get('/customers/ShowCustomersList_livewire_from_top_menu/{target_user_serial}', [\App\Http\Livewire\CustomerSearch::class,'search_from_top_menu'],function($target_user_serial){});
 	Route::post('/customers/ShowCustomersList_livewire_from_top_menu', CustomerSearch::class,function(Request $request){});

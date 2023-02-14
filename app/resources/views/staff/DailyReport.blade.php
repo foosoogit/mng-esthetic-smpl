@@ -50,7 +50,8 @@
     @livewireStyles
 </head>
 <body>
-    <livewire:customer-search>
+    <livewire:daily-report>
+    {{--  <livewire:customer-search>--}}
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
@@ -104,6 +105,7 @@
                 </div>
             </div>
         </nav>
+
         <main class="py-4">
             @yield('content')
         </main>

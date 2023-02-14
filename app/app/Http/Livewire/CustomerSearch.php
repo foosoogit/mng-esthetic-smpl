@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\OtherFunc;
 use App\Models\Staff;
 use Illuminate\Support\Facades\Auth;
+
 if(!isset($_SESSION)){session_start();}
 
 class CustomerSearch extends Component

@@ -1,24 +1,31 @@
-@extends('layouts.staff')
+{{--  @extends('layouts.staff')
+@extends('staff.DailyReport')
 @section('content')
+--}}
 <div>
 <script src="{{  asset('/js/DailyReport.js') }}" defer></script>
+{{--
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+--}}
     {{-- Because she competes with no one, no one can compete with her. --}}
     <section>
 	<div class="containor">
 		<div class="row justify-content-center">
 			<div class="col-md-12">
 				<div class="card" align="center">
-				<button class="bg-blue-500 text-white rounded px-3 py-1" type="button" onclick="location.href='../ShowMenuCustomerManagement'">メニューに戻る</button><br>
+				<button class="btn btn-primary" type="button" onclick="location.href='../ShowMenuCustomerManagement'">メニューに戻る</button><br>
 				@if($from_place=="monthly_rep")
 					<form method="POST" action="/workers/ShowMonthlyReport">@csrf
 						<input name="year_month_day" type="hidden" value="{{$today}}"/>
-						<button type="submit" name="target_date" class="bg-blue-500 text-white rounded px-3 py-1">月報に戻る</button>
+						<button type="submit" name="target_date" class="btn btn-primary">月報に戻る</button>
 					</form>
 				@endif
-				<livewire:select-branch-manage>
-				<div class="font-semibold text-2xl text-slate-600">[日報]</div>
+					<div class="font-semibold text-2xl text-slate-600">[日報]</div>
 					<div class="card-header">
-						<h3><form action="/workers/ShowDailyReport" method="POST" name="getTargetDate_fm" id="getTargetDate_fm">@csrf<input name="target_date" id="target_date" type="date" onchange="getTargetdata(this);" value="{{$today}}"/></form></h3>
+						<div class="row justify-content-center align-middle">
+							<h3><div class="col-auto">{!!$htm_branch_cbox!!}{{ $T }}</div><div class="col-auto"><form action="/workers/ShowDailyReport" method="POST" name="getTargetDate_fm" id="getTargetDate_fm">@csrf<input name="target_date" id="target_date" type="date" onchange="getTargetdata(this);" value="{{$today}}"/></form></div></h3>
+						</div>
 					</div>
 					合計：{{number_format((int)$total)}}円
 					{{--
@@ -94,22 +101,22 @@
 								<td class="border px-4 py-2">&nbsp;</td>
 								<td class="border px-4 py-2" style="text-align: right;">
 									@if($PaymentHistory->Card_Amount!=="")
-										{{ number_format($PaymentHistory->Card_Amount)}}
+										{{ number_format($PaymentHistory->card_amount)}}
 									@endif
 								</td>
 								<td class="border px-4 py-2" style="text-align: right;">
-									@if($PaymentHistory->Cash_Split!=="")
-											{{ number_format($PaymentHistory->Cash_Split)}}
+									@if($PaymentHistory->CashSplit!=="")
+											{{ number_format($PaymentHistory->cash_split)}}
 									@endif
 								</td>
 								<td class="border px-4 py-2" style="text-align: right;">
-									@if($PaymentHistory->Cash_Amount!=="")
-											{{ number_format($PaymentHistory->Cash_Amount)}}
+									@if($PaymentHistory->CashAmount!=="")
+											{{ number_format($PaymentHistory->cash_amount)}}
 									@endif
 								</td>
 								<td class="border px-4 py-2" style="text-align: right;">
 									@if($PaymentHistory->Cash_Total!=="" )
-											{{ number_format($PaymentHistory->CashTotal)}}
+											{{ number_format($PaymentHistory->cash_total)}}
 									@endif
 								</td>
 								<td class="border px-4 py-2" style="text-align: right;">
@@ -141,7 +148,6 @@
 										{!! number_format($Sum['total_cash'])!!}
 									@endif
 								</td>
-
 								<td class="border px-4 py-2" style="text-align: right;">{{ number_format($Sum['total'])}}
 								</td>
 							</tr>
@@ -236,4 +242,4 @@
 	</div>
 </section>
 </div>
-@endsection
+{{--  @endsection--}}

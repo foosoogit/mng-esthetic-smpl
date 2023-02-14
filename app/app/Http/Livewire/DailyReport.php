@@ -9,10 +9,23 @@ use App\Models\SalesRecord;
 use App\Models\Good;
 use App\Http\Controllers\InitConsts;
 use App\Http\Controllers\OtherFunc;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
 if(!isset($_SESSION)){session_start();}
 
 class DailyReport extends Component
 {
+    public static $serial_branch = '';
+    
+    public function select_branch($target_serial_branch){
+        print "target_serial_branch=".$target_serial_branch."<br>";
+        session(['target_branch_serial' => $target_serial_branch]);
+        self::$serial_branch=$target_serial_branch;
+        Staff::where('serial_staff', '=', Auth::user()->serial_staff)->update([
+            'selected_branch' => session('target_branch_serial'),
+        ]);
+	}
+
     public function sort($sort_key){
 		$sort_key_array=array();
 		$sort_key_array=explode("-", $sort_key);
@@ -28,7 +41,6 @@ class DailyReport extends Component
         $today = date("Y-m-d");
         $from_place="";
         OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
-        //print_r($_SESSION['access_history']);
         $backmonthly="";
         foreach($_SESSION['access_history'] as $targeturl){
             if(strpos($targeturl, 'ShowMonthlyReport') !== false){
@@ -48,22 +60,43 @@ class DailyReport extends Component
             $from_place="monthly_rep";
         }else if(isset($_POST['target_date'])){
             $today=$_POST['target_date'];
-            //print "test1<br>";
         }else if(isset($_POST['target_date_from_monthly_rep'])){
-            //print "test<br>";
             $today=$_POST['target_date_from_monthly_rep'];
             $from_place="monthly_rep";
         }
         
-        $PaymentHistories=PaymentHistory::where('date_payment','=',$today)
+        if(session('target_branch_serial')=="all" or session('target_branch_serial')== NULL){
+            $PaymentHistories=PaymentHistory::where('date_payment','=',$today)
+                ->leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')
+                ->paginate(initConsts::DdisplayLineNumCustomerList());
+            $subtotal_treatment=PaymentHistory::where('date_payment','=',$today)->sum('amount_payment');
+        }else{
+          
+            $PaymentHistories=PaymentHistory::where('date_payment','=',$today)
+            ->whereIn('payment_histories.serial_user', User::select('serial_user')->where('serial_branch','=', session('target_branch_serial')))
+            ->leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')->dump();
+            //dd($PaymentHistories->toSql(), $PaymentHistories->getBindings());
+           
+            $PaymentHistories=PaymentHistory::where('date_payment','=',$today)
+            ->whereIn('payment_histories.serial_user', User::select('serial_user')->where('serial_branch','=', session('target_branch_serial')))
             ->leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')
             ->paginate(initConsts::DdisplayLineNumCustomerList());
-        PaymentHistory::where('date_payment','=',$today)
-            ->leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')->dump();
-        //print_r($PaymentHistories);
-        $subtotal_treatment=PaymentHistory::where('date_payment','=',$today)->sum('amount_payment');
-    
-        $subtotal_treatment=PaymentHistory::where('date_payment','=',$today)->sum('amount_payment');
+            /*
+            $PaymentHistories=PaymentHistory::where('date_payment','=',$today)
+                ->whereIn('PaymentHistory.serial_user', User::select('serial_user')->where('serial_branch','=', session('target_branch_serial')))
+                ->leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')
+                ->paginate(initConsts::DdisplayLineNumCustomerList());
+            */
+            /*
+            $PaymentHistories=PaymentHistory::where('date_payment','=',$today)
+                ->leftJoin('users', 'payment_histories.serial_user', '=', session('target_branch_serial'))
+                ->where('users.serial_branch','=',$today)
+                ->paginate(initConsts::DdisplayLineNumCustomerList());
+            */
+            $subtotal_treatment=PaymentHistory::where('date_payment','=',$today)->sum('amount_payment');
+        }
+        //print_r( $PaymentHistories);
+        //$subtotal_treatment=PaymentHistory::where('date_payment','=',$today)->sum('amount_payment');
         
         $SalesRecords=SalesRecord::where('date_sale','=',$today)
             ->leftJoin('users', 'sales_records.serial_user', '=', 'users.serial_user')
@@ -86,7 +119,6 @@ class DailyReport extends Component
                 ->where('how_to_pay','=','card')
             ->sum('amount_payment');
     
-    
         $Sum['CashSplit']=PaymentHistory::where('date_payment','=',$today)
                 ->leftJoin('contracts', 'payment_histories.serial_keiyaku', '=', 'contracts.serial_keiyaku')
                 ->where('payment_histories.how_to_pay','=','cash')
@@ -98,7 +130,8 @@ class DailyReport extends Component
 
         session(['targetDay' => $today]);
         $_SESSION['backmonthday']=$today;
-    
-        return view('livewire.daily-report',compact('PaymentHistories','SalesRecords','header','slot','today','subtotal_treatment','subtotal_good','total','Sum','from_place'));
+        $htm_branch_cbox=OtherFunc::make_html_branch_rdo();
+        $T=self::$serial_branch;
+        return view('livewire.daily-report',compact('T','PaymentHistories','SalesRecords','header','slot','today','subtotal_treatment','subtotal_good','total','Sum','from_place','htm_branch_cbox'));
     }
 }
