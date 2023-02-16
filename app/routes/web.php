@@ -28,6 +28,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::view('/staff/login', 'staff/login');
 Route::post('/staff/login', [App\Http\Controllers\Staff\LoginController::class,'login']);
+Route::post('/menuStaff', [App\Http\Controllers\Staff\LoginController::class,'login']);
 Route::view('/staff/register', 'staff/register');
 Route::post('/staff/register', [App\Http\Controllers\Staff\RegisterController::class, 'register']);
 Route::group(['middleware' => ['auth:staff']], function(){
@@ -39,10 +40,10 @@ Route::group(['middleware' => ['auth:staff']], function(){
 	//Route::post('/workers/ShowDailyReport', DailyReport::class);
 
     Route::get('/workers/ShowDailyReport', function () {
-        return view('staff.DailyReport');
+        return view('staff.DailyRep');
     });
     Route::post('/workers/ShowDailyReport', function () {
-        return view('staff.DailyReport');
+        return view('staff.DailyRep');
     });
     //Route::get('/workers/ShowDailyReport', DailyReport::class);
 

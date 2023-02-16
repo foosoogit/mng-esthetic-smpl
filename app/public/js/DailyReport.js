@@ -37,7 +37,12 @@ function SetSellingPrice(obj){
 		});
 	}
 }
-
+/*
+function ChangeTargetBranch(obj){
+	//alert(obj.value);
+	document.getElementById("ChangeTargetBranch_fm").submit();
+}
+*/
 function getTargetdata(obj){
 	//alert('TEST');
 	document.getElementById("getTargetDate_fm").submit();

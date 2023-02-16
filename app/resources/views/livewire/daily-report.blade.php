@@ -23,9 +23,13 @@
 				@endif
 					<div class="font-semibold text-2xl text-slate-600">[日報]</div>
 					<div class="card-header">
+						<form action="/workers/ShowDailyReport" method="POST" name="getTargetDate_fm" id="getTargetDate_fm">@csrf
 						<div class="row justify-content-center align-middle">
-							<h3><div class="col-auto">{!!$htm_branch_cbox!!}{{ $T }}</div><div class="col-auto"><form action="/workers/ShowDailyReport" method="POST" name="getTargetDate_fm" id="getTargetDate_fm">@csrf<input name="target_date" id="target_date" type="date" onchange="getTargetdata(this);" value="{{$today}}"/></form></div></h3>
+							<h3><div class="col-auto">{!!$htm_branch_cbox!!}{{ $T }}</div>
+								{{--<div class="col-auto"><form action="/workers/ShowDailyReport" method="POST" name="getTargetDate_fm" id="getTargetDate_fm">@csrf<input name="target_date" id="target_date" type="date" onchange="getTargetdata(this);" value="{{$today}}"/></form></div></h3>--}}
+								<div class="col-auto"><input name="target_date" id="target_date" type="date" onchange="getTargetdata(this);" value="{{$today}}"/></div></h3>
 						</div>
+					</form>
 					</div>
 					合計：{{number_format((int)$total)}}円
 					{{--
@@ -93,7 +97,9 @@
 							<tr>
 								<td class="border px-4 py-2">{{ $PaymentHistory->serial_user}}<br></td>
 								<td class="border px-4 py-2">
-									<form method="POST" action="/customers/ShowCustomersList_livewire_from_top_menu">@csrf
+									
+									{{--<form method="POST" action="/customers/ShowCustomersList_livewire_from_top_menu">@csrf--}}
+									<form method="POST" action="/customers/UserList">@csrf
 										<button type="submit" name="btn_serial" value="{{$PaymentHistory->serial_user}}">{{ $PaymentHistory->name_sei}}&nbsp;{{ $PaymentHistory->name_mei}}</button>
 										<input name="target_day" type="hidden" value="{{$today}}"/>
 									</form>

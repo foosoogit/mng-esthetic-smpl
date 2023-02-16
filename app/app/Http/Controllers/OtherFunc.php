@@ -16,6 +16,30 @@ use App\Models\Staff;
 
 class OtherFunc extends Controller
 {
+	public static function make_html_branch_rdo_for_daily_report(){
+		$branches=Branch::all();
+		if(session('target_branch_serial')==""){
+			$selected_branch=Auth::user()->selected_branch;
+		}else{
+			$selected_branch=session('target_branch_serial');
+		}
+		$cked="";
+		if($selected_branch=="all"){$cked="checked";}
+		$htm_branch_cbox='<div class="form-group"><fieldset>';
+		$branchSerial="'all'";
+		//$htm_branch_cbox.='&nbsp;<input wire:click="select_branch_for_daily_report('.$branchSerial.')" name="branch_rdo" id="branch_rdo_all" type="radio" value="all" '.$cked.' /><label class="label" for="branch_rdo_all">&nbsp;全店舗</label></label>&nbsp&nbsp;';
+		$htm_branch_cbox.='&nbsp;<input onchange="getTargetdata(this);" name="branch_rdo" id="branch_rdo_all" type="radio" value="all" '.$cked.' /><label class="label" for="branch_rdo_all">&nbsp;全店舗</label></label>&nbsp&nbsp;';
+		foreach($branches as $branch){
+			$cked="";$branchSerial="";
+			if($selected_branch==$branch->serial_branch){$cked="checked";}
+			$branchSerial="'".$branch->serial_branch."'";
+			//$htm_branch_cbox.='&nbsp;<input wire:click="select_branch_for_daily_report('.$branchSerial.')"  name="branch_rdo" id="branch_rdo_'.$branch->serial_branch.'" type="radio" value="'.$branch->serial_branch.'" '.$cked.' />&nbsp;<label class="label" for="branch_rdo_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
+			$htm_branch_cbox.='&nbsp;<input onchange="getTargetdata(this);"  name="branch_rdo" id="branch_rdo_'.$branch->serial_branch.'" type="radio" value="'.$branch->serial_branch.'" '.$cked.' />&nbsp;<label class="label" for="branch_rdo_'.$branch->serial_branch.'">'.$branch->name_branch.'</label>&nbsp&nbsp;';
+		}
+		$htm_branch_cbox.='</fieldset></div>';
+		return $htm_branch_cbox;
+	}
+
 	public static function make_html_branch_rdo_for_inp_customer($target_branch_serial){
 		$branches=Branch::all();
 		$htm_branch_cbox='<div class="form-group"><fieldset>';
@@ -39,7 +63,7 @@ class OtherFunc extends Controller
 		if($selected_branch=="all"){$cked="checked";}
 		$htm_branch_cbox='<div class="form-group"><fieldset>';
 		$branchSerial="'all'";
-		$htm_branch_cbox.='&nbsp;<input wire:click="select_branch('.$branchSerial.')" name="branch_rdo" id="branch_rdo_all" type="radio" value="all" onchange="branch_cbox_manage(this);" '.$cked.' /><label class="label" for="branch_rdo_all">&nbsp;全店舗</label></label>&nbsp&nbsp;';
+		$htm_branch_cbox.='&nbsp;<input wire:click="select_branch('.$branchSerial.')" name="branch_rdo" id="branch_rdo_all" type="radio" value="all" '.$cked.' /><label class="label" for="branch_rdo_all">&nbsp;全店舗</label></label>&nbsp&nbsp;';
 		foreach($branches as $branch){
 			$cked="";$branchSerial="";
 			if($selected_branch==$branch->serial_branch){$cked="checked";}

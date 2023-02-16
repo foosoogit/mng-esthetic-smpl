@@ -7,17 +7,21 @@ use App\Models\constract;
 use App\Models\PaymentHistory;
 use App\Models\SalesRecord;
 use App\Models\Good;
+use Livewire\WithPagination;
+use Illuminate\Http\Request;
 use App\Http\Controllers\InitConsts;
 use App\Http\Controllers\OtherFunc;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Staff;
+use Illuminate\Support\Facades\Auth;
 if(!isset($_SESSION)){session_start();}
 
 class DailyReport extends Component
 {
     public static $serial_branch = '';
     
-    public function select_branch($target_serial_branch){
+    public function select_branch_for_daily_report($target_serial_branch){
         print "target_serial_branch=".$target_serial_branch."<br>";
         session(['target_branch_serial' => $target_serial_branch]);
         self::$serial_branch=$target_serial_branch;
@@ -42,6 +46,7 @@ class DailyReport extends Component
         $from_place="";
         OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
         $backmonthly="";
+
         foreach($_SESSION['access_history'] as $targeturl){
             if(strpos($targeturl, 'ShowMonthlyReport') !== false){
                 $backmonthly=true;
@@ -64,14 +69,25 @@ class DailyReport extends Component
             $today=$_POST['target_date_from_monthly_rep'];
             $from_place="monthly_rep";
         }
-        
+        $staff_inf=Staff::where('serial_staff','=',Auth::user()->serial_staff)->first();
+        if(isset($_POST['branch_rdo'])){
+            if($staff_inf->selected_branch<>$_POST['branch_rdo'] and isset($_POST['branch_rdo'])){
+                session(['target_branch_serial' => $_POST['branch_rdo']]);
+                //self::$serial_branch=$target_serial_branch;
+
+                //update(['date_latest_visit' =>$date_latest_visit])
+                Staff::where('serial_staff', '=', Auth::user()->serial_staff)->update(['selected_branch' => $_POST['branch_rdo']]);
+            }
+        }else{
+            session(['target_branch_serial' => $staff_inf->selected_branch]);
+        }
+
         if(session('target_branch_serial')=="all" or session('target_branch_serial')== NULL){
             $PaymentHistories=PaymentHistory::where('date_payment','=',$today)
                 ->leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')
                 ->paginate(initConsts::DdisplayLineNumCustomerList());
             $subtotal_treatment=PaymentHistory::where('date_payment','=',$today)->sum('amount_payment');
         }else{
-          
             $PaymentHistories=PaymentHistory::where('date_payment','=',$today)
             ->whereIn('payment_histories.serial_user', User::select('serial_user')->where('serial_branch','=', session('target_branch_serial')))
             ->leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')->dump();
@@ -130,8 +146,11 @@ class DailyReport extends Component
 
         session(['targetDay' => $today]);
         $_SESSION['backmonthday']=$today;
-        $htm_branch_cbox=OtherFunc::make_html_branch_rdo();
-        $T=self::$serial_branch;
+        $htm_branch_cbox=OtherFunc::make_html_branch_rdo_for_daily_report();
+        $T="";
+        //$htm_branch_cbox=OtherFunc::make_html_branch_rdo();
+        //$T=self::session('target_branch_serial');
+        //$T=$_POST['branch_rdo'];
         return view('livewire.daily-report',compact('T','PaymentHistories','SalesRecords','header','slot','today','subtotal_treatment','subtotal_good','total','Sum','from_place','htm_branch_cbox'));
     }
 }
