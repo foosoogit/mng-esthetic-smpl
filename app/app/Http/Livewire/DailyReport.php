@@ -22,7 +22,7 @@ class DailyReport extends Component
     public static $serial_branch = '';
     
     public function select_branch_for_daily_report($target_serial_branch){
-        print "target_serial_branch=".$target_serial_branch."<br>";
+        //print "target_serial_branch=".$target_serial_branch."<br>";
         session(['target_branch_serial' => $target_serial_branch]);
         self::$serial_branch=$target_serial_branch;
         Staff::where('serial_staff', '=', Auth::user()->serial_staff)->update([
@@ -69,6 +69,7 @@ class DailyReport extends Component
             $today=$_POST['target_date_from_monthly_rep'];
             $from_place="monthly_rep";
         }
+
         $staff_inf=Staff::where('serial_staff','=',Auth::user()->serial_staff)->first();
         if(isset($_POST['branch_rdo'])){
             if($staff_inf->selected_branch<>$_POST['branch_rdo'] and isset($_POST['branch_rdo'])){
@@ -126,7 +127,7 @@ class DailyReport extends Component
                 ->leftJoin('contracts', 'payment_histories.serial_keiyaku', '=', 'contracts.serial_keiyaku')
                 ->where('payment_histories.how_to_pay','=','cash')
                  ->where(function($query) {
-                    $query->where('contracts.how_many_pay_genkin','=','1')->orWhere('contracts.how_many_pay_card','=','1');
+                    $query->where('contracts.how_many_pay_genkin','=',1)->orWhere('contracts.how_many_pay_card','=',1);
                 })
             ->sum('amount_payment');
     
@@ -139,7 +140,7 @@ class DailyReport extends Component
                 ->leftJoin('contracts', 'payment_histories.serial_keiyaku', '=', 'contracts.serial_keiyaku')
                 ->where('payment_histories.how_to_pay','=','cash')
                  ->where(function($query) {
-                    $query->where('contracts.how_many_pay_genkin','>','1')->orWhere('contracts.how_many_pay_card','>','1');
+                    $query->where('contracts.how_many_pay_genkin','>',1)->orWhere('contracts.how_many_pay_card','>',1);
                 })->sum('amount_payment');
         $Sum['total_cash']=$Sum['cash']+$Sum['CashSplit'];
         $Sum['total']=$Sum['cash']+$Sum['card']+$Sum['CashSplit'];
@@ -147,10 +148,10 @@ class DailyReport extends Component
         session(['targetDay' => $today]);
         $_SESSION['backmonthday']=$today;
         $htm_branch_cbox=OtherFunc::make_html_branch_rdo_for_daily_report();
-        $T="";
+        //$T="";
         //$htm_branch_cbox=OtherFunc::make_html_branch_rdo();
         //$T=self::session('target_branch_serial');
         //$T=$_POST['branch_rdo'];
-        return view('livewire.daily-report',compact('T','PaymentHistories','SalesRecords','header','slot','today','subtotal_treatment','subtotal_good','total','Sum','from_place','htm_branch_cbox'));
+        return view('livewire.daily-report',compact('PaymentHistories','SalesRecords','header','slot','today','subtotal_treatment','subtotal_good','total','Sum','from_place','htm_branch_cbox'));
     }
 }

@@ -38,7 +38,7 @@
 						</form><br>
                         <p><form method="GET" action="/customers/ShowContractList/all">@csrf<button class="btn btn-primary" type="submit">契約一覧</button>&nbsp;修正・新規登録・契約</form></p><br>
 						<p><form method="GET" action="/workers/ShowDailyReport">@csrf<button class="btn btn-primary" type="submit">日報</button></form></p><br>
-						<form method="POST" action="/workers/ShowMonthlyReport">@csrf<p><button class="btn btn-primary" type="submit">月報</button>&emsp;<select name="year">{!!$html_year_slct!!}</select> <select name="month"><option  value="0" >選択</option>{!!$html_month_slct!!}</select></p></form><br>
+						<form method="POST" action="/staff/MonthlyRep">@csrf<p><button class="btn btn-primary" type="submit">月報</button>&emsp;<select name="year">{!!$html_year_slct!!}</select> <select name="month"><option  value="0" >選択</option>{!!$html_month_slct!!}</select></p></form><br>
 						<form method="POST" action="/workers/ShowContractsReport">@csrf<p><button class="btn btn-primary" type="submit">契約金額集計</button>&emsp;<select name="year">{!!$html_year_slct!!}</select> <select name="month"><option  value="0" >選択</option>{!!$html_month_slct!!}</select></p></form><br>
 						<form method="POST" action="/workers/ShowYearlyReport">@csrf<p><button class="btn btn-primary" type="submit">年報</button>&emsp;<select name="year">{!!$html_year_slct!!}</select> &nbsp;決算月<select name="kesan_month" onchange="save_kessan_month(this);"><option  value="0" >選択</option>{!!$htm_kesanMonth!!}</select>&emsp;契約達成率、前年度比等</p></form><br>
 						<p><form method="GET" action="/workers/ShowTreatmentContents">@csrf<button class="btn btn-primary" type="submit">施術登録</button></form></p><br>

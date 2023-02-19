@@ -9,7 +9,8 @@
 						<div class="col-auto"><button class="btn btn-primary active" type="button" onclick="location.href='/menuStaff'">メニューに戻る</button></div>
 						@if($from_place=="dayly_rep")
 							<div class="col-auto">
-								<form method="POST" action="/workers/ShowDailyReport_from_customers_List">@csrf
+								{{--<form method="POST" action="/workers/ShowDailyReport_from_customers_List">@csrf--}}
+								<form method="POST" action="/workers/ShowDailyReport">@csrf
 									<input name="target_day" type="hidden" value="{{$target_day}}"/>
 									<button type="submit" name="target_date" class="btn btn-primary" value="{{$target_day}}">日報に戻る</button>
 								</form>

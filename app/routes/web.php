@@ -26,12 +26,27 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::view('/staff/login', 'staff/login');
+Route::view('/staff/login', 'staff.login');
 Route::post('/staff/login', [App\Http\Controllers\Staff\LoginController::class,'login']);
+/*
+Route::post('/staff/login',function () {
+    return view('staff.login');
+});
+*/
+
 Route::post('/menuStaff', [App\Http\Controllers\Staff\LoginController::class,'login']);
 Route::view('/staff/register', 'staff/register');
 Route::post('/staff/register', [App\Http\Controllers\Staff\RegisterController::class, 'register']);
 Route::group(['middleware' => ['auth:staff']], function(){
+    
+    //Route::post('/workers/ShowDailyReport_from_monthly_report', DailyReport::class,function(Request $request){});
+    Route::post('/workers/ShowDailyReport_from_monthly_report', function () {
+        return view('staff.DailyRep');
+    });
+
+    Route::post('/staff/MonthlyRep', function () {
+        return view('staff.MonthlyRep');
+    });
     Route::post('/workers/upsertBranch', [\App\Http\Controllers\StaffController::class,'upsertBranch'],function(Request $request){});
     Route::get('/workers/ShowBranchRegistration/{serial_branch}', [\App\Http\Controllers\StaffController::class,'ShowBranchRegistration'],function($serial_branch){});
     Route::post('/workers/ShowBranchRegistration/{serial_branch}', [\App\Http\Controllers\StaffController::class,'ShowBranchRegistration'],function($serial_branch){});

@@ -16,7 +16,7 @@
 				<div class="card" align="center">
 				<button class="btn btn-primary" type="button" onclick="location.href='../ShowMenuCustomerManagement'">メニューに戻る</button><br>
 				@if($from_place=="monthly_rep")
-					<form method="POST" action="/workers/ShowMonthlyReport">@csrf
+					<form method="POST" action="/staff/MonthlyRep">@csrf
 						<input name="year_month_day" type="hidden" value="{{$today}}"/>
 						<button type="submit" name="target_date" class="btn btn-primary">月報に戻る</button>
 					</form>
@@ -25,7 +25,7 @@
 					<div class="card-header">
 						<form action="/workers/ShowDailyReport" method="POST" name="getTargetDate_fm" id="getTargetDate_fm">@csrf
 						<div class="row justify-content-center align-middle">
-							<h3><div class="col-auto">{!!$htm_branch_cbox!!}{{ $T }}</div>
+							<h3><div class="col-auto">{!!$htm_branch_cbox!!}</div>
 								{{--<div class="col-auto"><form action="/workers/ShowDailyReport" method="POST" name="getTargetDate_fm" id="getTargetDate_fm">@csrf<input name="target_date" id="target_date" type="date" onchange="getTargetdata(this);" value="{{$today}}"/></form></div></h3>--}}
 								<div class="col-auto"><input name="target_date" id="target_date" type="date" onchange="getTargetdata(this);" value="{{$today}}"/></div></h3>
 						</div>
