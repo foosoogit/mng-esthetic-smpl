@@ -43,8 +43,13 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('guest')->except('logout');
+        $this->middleware('guest')->except('logout');
         $this->middleware('guest:staff')->except('logout');
+    }
+
+    public function showStaffLoginForm()
+    {
+        return view('staff.login', ['staffgroup' => 'staff']);
     }
 
     protected function guard()                  //追記

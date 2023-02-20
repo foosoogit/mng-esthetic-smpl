@@ -1,13 +1,13 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+                <div class="card-header">{{ isset($authgroup) ? ucwords($authgroup) : ""}}{{ __('Login') }}</div>
 
                 <div class="card-body">
+                    Staff Login
                     <form method="POST" action="{{ url('staff/login') }}">
                         @csrf
                         <input type="hidden" name="guard" value="staff">

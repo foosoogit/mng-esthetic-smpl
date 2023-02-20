@@ -28,6 +28,8 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::view('/staff/login', 'staff.login');
 Route::post('/staff/login', [App\Http\Controllers\Staff\LoginController::class,'login']);
+//Route::post('/staff/login', [App\Http\Controllers\Staff\LoginController::class,'showStaffLoginForm']);
+Route::get('/staff/login', [App\Http\Controllers\Staff\LoginController::class,'showStaffLoginForm']);
 /*
 Route::post('/staff/login',function () {
     return view('staff.login');
@@ -35,9 +37,14 @@ Route::post('/staff/login',function () {
 */
 
 Route::post('/menuStaff', [App\Http\Controllers\Staff\LoginController::class,'login']);
-Route::view('/staff/register', 'staff/register');
+//Route::get('/menuStaff', [App\Http\Controllers\Staff\LoginController::class,'showStaffLoginForm']);
+//Route::view('/staff/register', 'staff/register');
+
 Route::post('/staff/register', [App\Http\Controllers\Staff\RegisterController::class, 'register']);
 Route::group(['middleware' => ['auth:staff']], function(){
+//Route::middleware('guest:Staff')->group(function () {
+//Route::group(['middleware' => ['authStaff']], function(){
+
     
     //Route::post('/workers/ShowDailyReport_from_monthly_report', DailyReport::class,function(Request $request){});
     Route::post('/workers/ShowDailyReport_from_monthly_report', function () {

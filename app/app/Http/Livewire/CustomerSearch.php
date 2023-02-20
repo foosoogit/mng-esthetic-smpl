@@ -135,17 +135,18 @@ class CustomerSearch extends Component
 			}else{
 				$key=$userQuery->where('serial_branch','=',session('target_branch_serial'))
 					->Where(function($query) {
-					$query->orwhere('name_sei','like',self::$key)
-					->orwhere('name_mei','like',self::$key)
-					->orwhere('name_sei_kana','like',self::$key)
-					->orwhere('name_mei_kana','like',self::$key)
-					->orwhere('birth_year','like',self::$key)
-					->orwhere('birth_month','like',self::$key)
-					->orwhere('birth_day','like',self::$key)
-					->orwhere('address_region','like',self::$key)
-					->orwhere('address_locality','like',self::$key)
-					->orwhere('email','like',self::$key)
-					->orwhere('phone','like',self::$key);
+						$query->orwhere('serial_user','like',self::$key)
+						->orwhere('name_sei','like',self::$key)
+						->orwhere('name_mei','like',self::$key)
+						->orwhere('name_sei_kana','like',self::$key)
+						->orwhere('name_mei_kana','like',self::$key)
+						->orwhere('birth_year','like',self::$key)
+						->orwhere('birth_month','like',self::$key)
+						->orwhere('birth_day','like',self::$key)
+						->orwhere('address_region','like',self::$key)
+						->orwhere('address_locality','like',self::$key)
+						->orwhere('email','like',self::$key)
+						->orwhere('phone','like',self::$key);
 				});
 			}
 		}
@@ -217,19 +218,20 @@ class CustomerSearch extends Component
 				}
 			}
 		}
-		/*
+		
 		if(session('target_page_for_pager')!==null){
 			$targetPage=session('target_page_for_pager');
 			session(['target_page_for_pager'=>null]);
 		}else{
 			$targetPage=null;
 		}
-		*/
+		
 		//$userQuery = User::query();
         $userQuery =$userQuery->orderBy('name_sei_kana', 'asc');
 		//dd($userQuery);
-        $targetPage=null;
+       	//$targetPage=null;
 		//dd($userQuery);
+		//dd($userQuery->toSql(), $userQuery->getBindings());
         $users=$userQuery->paginate($perPage = initConsts::DdisplayLineNumCustomerList(),['*'], 'page',$targetPage);
 		$totalZankin=Contract::sum('keiyaku_kingaku')-PaymentHistory::sum('amount_payment');
        // $users=User::paginate($perPage = initConsts::DdisplayLineNumCustomerList(),['*'], 'page',$targetPage);

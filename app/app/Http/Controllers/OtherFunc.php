@@ -49,7 +49,6 @@ class OtherFunc extends Controller
 				}
 				*/
 			}else{
-				//$TargetQuery=$TargetQuery->where('keiyakus.how_many_pay_genkin','=','1');
 				$TargetQuery=$TargetQuery->where(function($query) {
 					$query->where('contracts.how_many_pay_genkin','=',1)->orWhere('contracts.how_many_pay_card','=',1);
 				});
@@ -82,11 +81,6 @@ class OtherFunc extends Controller
 		}
 		*/
 		$TargetQuery=$TargetQuery->selectRaw('SUM(amount_payment) as total');
-		
-		if($HowToPay=='cash' && $targetDay=='2022-07-29' && $HowMany<>'bunkatu'){
-			//dd(preg_replace_array('/\?/', $TargetQuery->getBindings(), $TargetQuery->toSql()));
-			//dd($TargetQuery->toSql(), $TargetQuery->getBindings());
-		}
 		
 		$TotalAmount=$TargetQuery->first(['total']);
 		$total=$TotalAmount->total+session('TotalSales');
@@ -272,8 +266,7 @@ class OtherFunc extends Controller
 
 	public static function get_raitenReason($targetYear,$targetMonth){
 		$key=$targetYear."-".sprintf('%02d', $targetMonth);
-		//print "key=".$key;
-		$reason_coming_array=explode(",", initConsts::ReasonsComing());
+			$reason_coming_array=explode(",", initConsts::ReasonsComing());
 		$htm_raitenReason_array=array();
 		foreach($reason_coming_array as $value){
 			$reason_cnt=0;
@@ -282,9 +275,6 @@ class OtherFunc extends Controller
 			->where('admission_date','like',$key."%")
 			->where('reason_coming','like',"%".$value."%")
 			->count();
-			//dd(\DB::getQueryLog());	
-			//dd($reason_cnt->toSql(), $reason_cnt->getBindings());
-			//dd($reason_cnt->getBindings());
 			$htm_raitenReason_array[]=$value." : ".$reason_cnt;
 		}
 		$htm_raitenReason=implode("&nbsp;&nbsp;",$htm_raitenReason_array);
@@ -355,7 +345,7 @@ class OtherFunc extends Controller
 	}
 	public static function make_html_branch_rdo(){
 		$branches=Branch::all();
-		if(session('target_branch_serial')==""){
+		if(session('target_branch_serial')=="" ){
 			$selected_branch=Auth::user()->selected_branch;
 		}else{
 			$selected_branch=session('target_branch_serial');

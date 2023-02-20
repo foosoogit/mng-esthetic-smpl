@@ -49,7 +49,7 @@ class User extends Authenticatable
     }
 
     public function getUserZankinAttribute($value){
-		$TotalAmount=Keiyaku::where('serial_user','=', $this->serial_user)
+		$TotalAmount=Contract::where('serial_user','=', $this->serial_user)
 			->where('cancel','=',null)
 			->selectRaw('SUM(keiyaku_kingaku) as total')
 			->first(['total']);
