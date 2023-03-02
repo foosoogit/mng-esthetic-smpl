@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\OtherFunc;
 use App\Models\Staff;
 use Illuminate\Support\Facades\Auth;
-
 if(!isset($_SESSION)){session_start();}
 
 class CustomerSearch extends Component
@@ -55,7 +54,6 @@ class CustomerSearch extends Component
 	}
 
     public function sort($sort_key){
-		//print "sort_key=".$sort_key."<br>";
 		$sort_key_array=array();
 		$sort_key_array=explode("-", $sort_key);
 		
@@ -108,7 +106,7 @@ class CustomerSearch extends Component
 		if((isset($_POST['target_day']) and $_POST['target_day']<>"") or $backdayly==true){
 			$from_place="dayly_rep";
 			if(isset($_POST['target_day'])){
-			$target_day= $_POST['target_day'];
+				$target_day= $_POST['target_day'];
 			}else{
 				$target_day=$_SESSION['backmonthday'];
 			}
@@ -238,7 +236,7 @@ class CustomerSearch extends Component
         $header="";$slot="";
 		$htm_branch_cbox=OtherFunc::make_html_branch_rdo();
         //return view('livewire.livewire-test2',compact('users','header','slot','totalZankin','from_place','target_day','from_place'));
-		return view('livewire.customer-search',compact('users','header','slot','totalZankin','from_place','target_day','from_place','htm_branch_cbox'));
+		return view('livewire.customer-search',compact('users','header','slot','totalZankin','from_place','target_day','htm_branch_cbox'));
     }
     /*
 	use WithPagination;

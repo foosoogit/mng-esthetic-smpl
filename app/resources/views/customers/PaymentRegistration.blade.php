@@ -1,4 +1,4 @@
-@extends('layouts.appCustomer')
+@extends('layouts.appPaymentRegistration')
 @section('content')
 <script type="text/javascript" src="{{ asset('/js/PaymentRegistration.js') }}"></script>
 <style type="text/css">
@@ -9,9 +9,11 @@ table td {border: 1px solid #aaa;}
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-				<a href="../../../ShowMenuCustomerManagement" class="btn bg-blue-500  rounded px-3 py-2">メニュー</a>
-				<a href="{{$GoBackToPlace}}" class="btn bg-blue-500  rounded px-3 py-2">戻る</a>
-				<a href="/customers/ShowSyuseiContract/{{$targetContract->serial_keiyaku}}/{{$targetContract->serial_user}}" class="btn bg-blue-500 rounded px-3 py-2">契約書</a>
+					<div class="row justify-content-center">
+						<div class="col-auto"><a href="../../../ShowMenuCustomerManagement" class="btn btn-primary active">メニュー</a></div>
+						<div class="col-auto"><a href="{{$GoBackToPlace}}" class="btn btn-primary active">戻る</a></div>
+						<div class="col-auto"><a href="/customers/ShowSyuseiContract/{{$targetContract->serial_keiyaku}}/{{$targetContract->serial_user}}" class="btn btn-primary active">契約書</a></div>
+					</div>
 		<div class="card-header">顧客</div>
 		<p>氏名：{{ optional($targetUser)->name_sei }}&nbsp;{{ optional($targetUser)->name_mei }}</p>
 			<p>契約日: {{$targetContract->keiyaku_bi}}</p>
@@ -406,9 +408,9 @@ table td {border: 1px solid #aaa;}
 				</script>
 				
 				@if(optional($targetContract)->cancel===null)
-					<p style="text-align: center"><button class="bg-blue-500 text-white rounded px-3 py-1" type="submit" name="KeiyakuSerialBtn" id="KeiyakuSerialBtn" onclick="return payment_manage();">　　登　録　　</button></p>
+					<p style="text-align: center"><button class="btn btn-primary active" type="submit" name="KeiyakuSerialBtn" id="KeiyakuSerialBtn" onclick="return payment_manage();">　　登　録　　</button></p>
 				@else
-					<p style="text-align: center"><button class="bg-blue-500 text-white rounded px-3 py-1" type="submit" name="KeiyakuSerialBtn" id="KeiyakuSerialBtn" onclick="return canceled_message();" style="background-color:gray">　　登　録　　</button></p>
+					<p style="text-align: center"><button class="btn btn-primary active" type="submit" name="KeiyakuSerialBtn" id="KeiyakuSerialBtn" onclick="return canceled_message();" style="background-color:gray">　　登　録　　</button></p>
 				@endif
 				</form>
                         <p>郵便番号：{{ $targetUser->postal }}</p>

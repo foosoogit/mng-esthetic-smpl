@@ -22,6 +22,10 @@ class SelectBranchManage extends Component
 
     public function render()
     {
+        if(isset($_SERVER['HTTP_REFERER'])){
+			OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
+		}
+        
         if(self::$serial_branch==""){
             $selected_brnch=Staff::select('selected_branch')->where('serial_staff', '=', Auth::user()->serial_staff)->first();
             self::$serial_branch=$selected_brnch->selected_branch;

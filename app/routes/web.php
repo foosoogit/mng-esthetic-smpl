@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\StaffController;
 use App\Http\Livewire\CustomerSearch;
-//use App\Http\Livewire\DailyReport;
 use App\Http\Livewire\Counter;
+use App\Http\Livewire\TreatmentContents;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,11 +42,23 @@ Route::post('/menuStaff', [App\Http\Controllers\Staff\LoginController::class,'lo
 
 Route::post('/staff/register', [App\Http\Controllers\Staff\RegisterController::class, 'register']);
 Route::group(['middleware' => ['auth:staff']], function(){
-//Route::middleware('guest:Staff')->group(function () {
-//Route::group(['middleware' => ['authStaff']], function(){
+    //Route::post('/workers/ShowYearlyReport', YearlyReport::class,function(Request $request){});
+    Route::post('/workers/ShowYearlyReport', function () {
+        return view('staff.appYearlyRep');
+    });
+    Route::post('/workers/ShowContractsReport', function () {
+        return view('staff.appContractsRep');
+    });
+    //Route::post('/workers/ShowContractsReport', ContractsReport::class);
+    Route::get('/workers/deleteTreatmentContent/{serial_TreatmentContent}',[\App\Http\Controllers\StaffController::class,'deleteTreatmentContent'],function($serial_TreatmentContent){});
+    Route::post('/workers/saveTreatmentContent', [\App\Http\Controllers\StaffController::class,'SaveTreatmentContent']);
 
+    Route::get('/workers/ShowSyuseiTreatmentContent/{TreatmentContentSerial}', [\App\Http\Controllers\StaffController::class,'ShowSyuseiTreatmentContent',function($TreatmentContentSerial){}]);
+
+    Route::get('/workers/ShowTreatmentContents', function () {
+        return view('staff.TreatmentList');
+    });
     
-    //Route::post('/workers/ShowDailyReport_from_monthly_report', DailyReport::class,function(Request $request){});
     Route::post('/workers/ShowDailyReport_from_monthly_report', function () {
         return view('staff.DailyRep');
     });
@@ -58,8 +70,6 @@ Route::group(['middleware' => ['auth:staff']], function(){
     Route::get('/workers/ShowBranchRegistration/{serial_branch}', [\App\Http\Controllers\StaffController::class,'ShowBranchRegistration'],function($serial_branch){});
     Route::post('/workers/ShowBranchRegistration/{serial_branch}', [\App\Http\Controllers\StaffController::class,'ShowBranchRegistration'],function($serial_branch){});
     Route::get('/workers/ShowBranchList', [\App\Http\Controllers\StaffController::class,'ShowBranchList']);
-    //Route::get('/workers/ShowDailyReport', DailyReport::class);
-	//Route::post('/workers/ShowDailyReport', DailyReport::class);
 
     Route::get('/workers/ShowDailyReport', function () {
         return view('staff.DailyRep');
@@ -67,16 +77,14 @@ Route::group(['middleware' => ['auth:staff']], function(){
     Route::post('/workers/ShowDailyReport', function () {
         return view('staff.DailyRep');
     });
-    //Route::get('/workers/ShowDailyReport', DailyReport::class);
-
+    
     Route::get('/customers/ShowCustomersList_livewire_from_top_menu/{target_user_serial}', [\App\Http\Livewire\CustomerSearch::class,'search_from_top_menu'],function($target_user_serial){});
 	Route::post('/customers/ShowCustomersList_livewire_from_top_menu', CustomerSearch::class,function(Request $request){});
 
-    Route::post('/customers/UserList', function () {
+     Route::get('/customers/UserList', function () {
         return view('staff.UserList');
     });
-
-    Route::get('/customers/UserList', function () {
+    Route::post('/customers/UserList', function () {
         return view('staff.UserList');
     });
 
@@ -102,5 +110,5 @@ Route::group(['middleware' => ['auth:staff']], function(){
     Route::get('/customers/ShowCustomersList', [\App\Http\Controllers\StaffController::class,'ShowCustomersList']);
     Route::get('/ShowUserList', [\App\Http\Controllers\StaffController::class,'ShowUserList'])->name('ShowUserList');
     Route::get('/customers/ShowInputCustomer', [\App\Http\Controllers\StaffController::class,'ShowInputCustomer']);
-    Route::post('staff/logout', [App\Http\Controllers\Staff\LoginController::class,'logout'])->name('staff.logout');
+    Route::post('/staff/logout', [App\Http\Controllers\Staff\LoginController::class,'logout'])->name('staff.logout');
 });

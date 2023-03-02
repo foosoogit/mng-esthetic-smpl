@@ -1,4 +1,4 @@
-@extends('layouts.appCustomer')
+@extends('layouts.appContract')
 @section('content')
 <script type="text/javascript" src="{{ asset('/js/CreateContracts.js') }}"></script>
 <style type="text/css">
@@ -13,19 +13,24 @@ input,textarea{border: 1px solid #aaa;}
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-				<a href="../../../ShowMenuCustomerManagement" class="btn bg-blue-500 text-white rounded px-3 py-2">メニュー</a>
-                <a href="/customers/ShowContractList/{{$targetUser->serial_user}}" class="btn bg-blue-500 text-white rounded px-3 py-2">戻る</a>
-                <a href="/customers/ShowInpRecordVisitPayment/{{optional($targetContract)->serial_keiyaku}}/{{optional($targetContract)->serial_user}}" class="btn bg-blue-500 text-white rounded px-3 py-2">来店・支払い記録</a>@if (auth('staff')->user()->serial_staff==='A_0001') &nbsp;
-				<a href="/workers/MakeContractPDF/{{optional($targetContract)->serial_keiyaku}}" class="btn bg-blue-500 text-white rounded px-3 py-2">契約書ダウンロード・印刷</a>@endif
+					
+					<div class="row justify-content-center">
+						<div class="col-auto"><a href="../../../ShowMenuCustomerManagement" class="btn btn-primary active">メニュー</a></div>
+						<div class="col-auto"><a href="/customers/ShowContractList/{{$targetUser->serial_user}}" class="btn btn-primary active">戻る</a></div>
+						<div class="col-auto"><a href="/customers/ShowInpRecordVisitPayment/{{optional($targetContract)->serial_keiyaku}}/{{optional($targetContract)->serial_user}}" class="btn btn-primary active">来店・支払い記録</a></div>
+					</div>
+				@if (auth('staff')->user()->serial_staff==='A_0001') &nbsp;
+					<a href="/workers/MakeContractPDF/{{optional($targetContract)->serial_keiyaku}}" class="btn btn-primary active">契約書ダウンロード・印刷</a>
+				@endif
 				<form action="/workers/ContractCancellation/{{optional($targetContract)->serial_keiyaku}}/{{$targetUser->serial_user}}" method="POST" name="KaiyakuFm"  id="KaiyakuFm">@csrf<br>
 				
 				@if(optional($targetContract)->cancel===null)
 					{{--<a href="/workers/ContractCancellation/{{optional($targetContract)->serial_keiyaku}}/{{$targetUser->serial_user}}" class="btn bg-blue-500 text-white rounded px-3 py-2">解約</a>--}}
-					<input name="KaiyakuBtn" type="submit" value="解約"  class="btn bg-blue-500 text-white rounded px-3 py-1.5" onclick="return cancel_validate();"/>
+					<input name="KaiyakuBtn" type="submit" value="解約"  class="btn btn-primary active" onclick="return cancel_validate();"/>
 					解約日<input name="KaiyakuDate" id="KaiyakuDate" type="date" value="{{optional($targetContract)->cancel}}"/>
 				@else
 					{{--<a href="/workers/ContractCancellation/{{optional($targetContract)->serial_keiyaku}}/{{$targetUser->serial_user}}" class="btn bg-blue-500 text-white rounded px-3 py-2">契約を復活</a>解約日：{{optional($targetContract)->cancel}}--}}
-					<input name="KaiyakuModosuBtn" type="submit" value="契約を復活"  class="btn bg-blue-500 text-white rounded px-3 py-1.5" onclick="return modosu_cancel();"/>
+					<input name="KaiyakuModosuBtn" type="submit" value="契約を復活"  class="btn btn-primary active" onclick="return modosu_cancel();"/>
 解約日：{{optional($targetContract)->cancel}}
 				
 				@endif
@@ -53,7 +58,7 @@ input,textarea{border: 1px solid #aaa;}
 			<p><span class="auto-style2">*</span>施術回数 {!!$TreatmentsTimes_slct!!}</p>
 				<table style="width: 100%;border-collapse: collapse;border: 1px solid #aaa;" class="table-auto" border-solid border="1">
 						<tr>
-							<td>契約内容明細&nbsp;&nbsp;<input name="toroku_treatment_btn" type="button" class="bg-blue-500 text-white rounded px-3 py-1" value="施術内容登録" onclick="location.href='/workers/ShowTreatmentContents'"></td>
+							<td>契約内容明細&nbsp;&nbsp;<input name="toroku_treatment_btn" type="button" class="btn btn-primary active" value="施術内容登録" onclick="location.href='/workers/ShowTreatmentContents'"></td>
 							<td>回数</td>
 							<td>単価</td>
 							<td>料金(税抜き)</td>
@@ -244,9 +249,9 @@ input,textarea{border: 1px solid #aaa;}
 		<p>メモ：<textarea cols="20" name="memo" id="memo" rows="2" class="bg-white-500 text-black rounded px-3 py-1">{{optional($targetContract)->remarks}}</textarea></p>
 		<p style="text-align: center">
 		@if(optional($targetContract)->cancel===null)
-			<button  class="bg-blue-500 text-white rounded px-3 py-1" type="submit" type="submit" onclick="return validate();">　　登　録　　</button>
+			<button  class="btn btn-primary active" type="submit" type="submit" onclick="return validate();">　　登　録　　</button>
 		@else
-			<button  class="bg-blue-500 text-white rounded px-3 py-1" type="submit" type="submit" onclick="return canceled_message();" style="background-color:gray">　　登　録　　</button>
+			<button  class="btn btn-primary active" type="submit" type="submit" onclick="return canceled_message();" style="background-color:gray">　　登　録　　</button>
 		@endif
 
 		</p>

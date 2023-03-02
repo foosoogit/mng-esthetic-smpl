@@ -89,9 +89,9 @@ class DailyReport extends Component
                 ->paginate(initConsts::DdisplayLineNumCustomerList());
             $subtotal_treatment=PaymentHistory::where('date_payment','=',$today)->sum('amount_payment');
         }else{
-            $PaymentHistories=PaymentHistory::where('date_payment','=',$today)
-            ->whereIn('payment_histories.serial_user', User::select('serial_user')->where('serial_branch','=', session('target_branch_serial')))
-            ->leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')->dump();
+            //$PaymentHistories=PaymentHistory::where('date_payment','=',$today)
+            //->whereIn('payment_histories.serial_user', User::select('serial_user')->where('serial_branch','=', session('target_branch_serial')))
+            //->leftJoin('users', 'payment_histories.serial_user', '=', 'users.serial_user')->dump();
             //dd($PaymentHistories->toSql(), $PaymentHistories->getBindings());
            
             $PaymentHistories=PaymentHistory::where('date_payment','=',$today)

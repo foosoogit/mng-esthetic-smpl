@@ -10,17 +10,17 @@
 					{!!$msg!!}
 					<ul>
 					<li><form method="GET" action="/customers/ShowInpContract/{{$targetSerial}}">@csrf
-						<button class="bg-blue-500 text-white rounded px-3 py-1" type="submit">続けて契約書を作成</button>
+						<button class="btn btn-primary active" type="submit">続けて契約書を作成</button>
 					</form></li><br>
 					<li><form method="GET" action="/customers/ShowInputCustomer">@csrf
-						<button class="bg-blue-500 text-white rounded px-3 py-1" type="submit">新規顧客追加</button>
+						<button class="btn btn-primary active" type="submit">新規顧客追加</button>
 					</form></li><br>
 					<li>
 					{{--
 					<form method="GET" action="../ShowMenuCustomerManagement">@csrf
 					--}}
 						<form method="GET" action="{{$GoToBackPlace}}">@csrf
-						<button class="bg-blue-500 text-white rounded px-3 py-1" type="submit">戻る</button>
+						<button class="btn btn-primary active" type="submit">戻る</button>
 					</form></li>
 					</ul>
 				</div>

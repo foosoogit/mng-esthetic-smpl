@@ -1,9 +1,9 @@
 <?php
 
 $dbHost = "mysql1404b.xserver.jp";
-$dbUser = "foosoo_keys";
-$dbPass = "b2ku5ykt";
-$dbName = "foosoo_musicacademy";
+$dbUser = "foosoo_smpl";
+$dbPass = "3YX4uoZl";
+$dbName = "foosoo_smpl";
  
 //$filePath = "/home/foosoo/foosoo.xsrv.jp/db_bk/";
 $filePath = "db_bk/";

@@ -27,6 +27,9 @@ class MonthlyReport extends Component
    
     public function render()
     {
+        if(isset($_SERVER['HTTP_REFERER'])){
+			OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
+		}
         $split_year_month_day_array=array();
     	if(isset($_POST['year_month_day'])){
     		$split_year_month_day_array=explode( '-', $_POST['year_month_day'] );

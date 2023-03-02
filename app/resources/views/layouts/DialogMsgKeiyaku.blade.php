@@ -10,7 +10,7 @@
 					{!!$msg!!}
 					<ul>
 					<li><form method="GET" action="/customers/ShowInpRecordVisitPayment/{{$SerialKeiyaku}}/{{$SerialUser}}">@csrf
-						<button class="bg-blue-500 text-white rounded px-3 py-1" type="submit">続けて来店記録を作成</button>
+						<button class="btn btn-primary active" type="submit">続けて来店記録を作成</button>
 					</form></li><br>
 					{{--
 					<li><form method="GET" action="/customers/ShowSyuseiContract/{{$SerialKeiyaku}}/{{$UserSerial}}">@csrf
@@ -18,7 +18,7 @@
 					</form></li><br>
 					--}}
 					<li><form method="GET" action="{{$GoBackToPlace}}">@csrf
-						<button class="bg-blue-500 text-white rounded px-3 py-1" type="submit">戻る</button>
+						<button class="btn btn-primary active" type="submit">戻る</button>
 					</form></li>
 					</ul>
 				</div>

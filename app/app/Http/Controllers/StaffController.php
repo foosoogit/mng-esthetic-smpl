@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\ContractDetail;
 use App\Models\VisitHistory;
 use App\Models\Branch;
+use App\Models\TreatmentContent;
 
 class StaffController extends Controller
 {
@@ -24,6 +25,52 @@ class StaffController extends Controller
 		$this->middleware('auth:staff');
 	}
 
+	public function deleteTreatmentContent($TreatmentContentSerial){
+		$deleTreatmentContent=TreatmentContent::where('serial_treatment_contents','=',$TreatmentContentSerial)->delete();
+		$this::save_recorder("deleteTreatmentContent");
+		return redirect('/workers/ShowTreatmentContents');
+	}
+
+	public function SaveTreatmentContent(Request $request){
+		$targetData=[
+			'created_at' => date('Y-m-d H:i:s'),
+			'serial_treatment_contents' => $request->serial_TreatmentContent,
+			'name_treatment_contents' => $request->TreatmentContent_name,
+			'name_treatment_contents_kana' => $request->TreatmentContent_name_kana,
+			'treatment_details' => $request->TreatmentContent_details,
+			'memo' => $request->memo,
+		];
+		TreatmentContent::upsert($targetData,['serial_treatment_contents']);
+		session()->flash('success', '登録しました。');
+		$this::save_recorder("SaveTreatmentContent");
+		return redirect('/workers/ShowTreatmentContents');
+	}
+
+	public function ShowSyuseiTreatmentContent($TreatmentContentSerial){
+		//print "TreatmentContentSerial=".$TreatmentContentSerial;
+		$header="";$slot="";
+		$GoBackPlace="/workers/ShowTreatmentContents";$saveFlg="";
+		if($TreatmentContentSerial=="new"){
+			$maxSerial=DB::table('treatment_contents')->max('serial_treatment_contents');
+			if($maxSerial==""){
+				$targetTreatmentContentSerial="Tr_000001";
+			}else{
+				$targetTreatmentContentSerial=++$maxSerial;
+			}
+			$TreatmentContentInf=array();$btnDisp="新規登録";
+			//$targetGoodSerial=$maxSerial;
+			session(['TreatmentContentSerial' => $targetTreatmentContentSerial]);
+			return view('staff.CreateTreatmentContents',compact("header","slot",'targetTreatmentContentSerial','TreatmentContentInf',"GoBackPlace","btnDisp","saveFlg"));
+		}else{
+			session(['TreatmentContentmanage' => 'new']);
+			$TreatmentContentInf=TreatmentContent::where('serial_treatment_contents','=',$TreatmentContentSerial)->first();
+			$btnDisp="修正";
+			$targetTreatmentContentSerial=$TreatmentContentSerial;
+			session(['targetGoodSerial' => $TreatmentContentSerial]);
+			return view('staff.CreateTreatmentContents',compact("header","slot",'targetTreatmentContentSerial','TreatmentContentInf',"GoBackPlace","btnDisp","saveFlg"));
+		}
+	}
+	
 	public function ShowBranchRegistration($target_branch_serial){
 		$target_branch_inf="";
 		if($target_branch_serial<>"new"){
@@ -77,6 +124,9 @@ class StaffController extends Controller
 	public function ShowSyuseiContract($ContractSerial,$UserSerial){
 		session(['ContractManage' => 'syusei']);
 		session(['fromPage' => 'SyuseiContract']);
+		if(isset($_SERVER['HTTP_REFERER'])){
+			OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
+		}
 		$header="";$slot="";$selectedManth=array();$selectedManth=array();
 		$newKeiyakuSerial=$ContractSerial;
 		$targetContract=Contract::where('serial_keiyaku','=', $ContractSerial)->first();
@@ -119,61 +169,65 @@ class StaffController extends Controller
 			$KeiyakuTankaArray[]="";
 			$KeiyakuPriceArray[]="";
 		}
+		/*
+		$input = $request->all();
+		print_r($input);
 		if(isset($request->syusei_Btn)){
 			$GoBackPlace="/customers/UserList";
-			if(Auth::user()->serial_teacher=="S_0001"){
-				$GoBackPlace="/customers/UserList";
-			}else{
-				$GoBackPlace="/customers/UserList";
-			}
 		}else if(isset($request->fromMenu)){
 			$GoBackPlace="../ShowMenuCustomerManagement";
+		}else if(isset($request->contract_syusei_Btn)){
+			$GoBackPlace="/customers/ShowContractList/".$UserSerial;
 		}
+		*/
+		/*
+		foreach($_SESSION['access_history'] as $targetHistory){
+			if(strpos($targetHistory,"ContractList")){
+				$GoBackPlace="/customers/ShowContractList";
+				$GoBackPlaceName="戻る";
+				break;
+			}else if(strpos($targetHistory,"menuStaff")){
+				$GoBackPlace="";
+				$GoBackPlaceName="";
+			}
+		}
+		*/
 		$GoBackPlace="/customers/ShowContractList";
+		$access_history=implode (",", $_SESSION['access_history']);
 		$TreatmentsTimes_slct=OtherFunc::make_html_TreatmentsTimes_slct($targetContract->treatments_num);
-		return view('customers.CreateContracts',compact("header","slot",'newKeiyakuSerial','targetContract',"targetContractdetails","targetUser","KeiyakuNaiyouArray","KeiyakuNumSlctArray","KeiyakuTankaArray","KeiyakuPriceArray","HowToPay","HowManyPay","CardCompanySelect","GoBackPlace","TreatmentsTimes_slct","KeiyakuNaiyouSelectArray"));
+		return view('customers.CreateContracts',compact("access_history","header","slot",'newKeiyakuSerial','targetContract',"targetContractdetails","targetUser","KeiyakuNaiyouArray","KeiyakuNumSlctArray","KeiyakuTankaArray","KeiyakuPriceArray","HowToPay","HowManyPay","CardCompanySelect","GoBackPlace","TreatmentsTimes_slct","KeiyakuNaiyouSelectArray"));
 	}
 
 	public function ShowContractList($UserSerial,Request $request){
 		session(['fromPage' => 'ContractList']);
 		session(['targetUserSerial' => $UserSerial]);
+		//print 'targetUserSerial='.session('targetUserSerial')."<br>";
+		if(isset($_SERVER['HTTP_REFERER'])){
+			OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
+		}
 		if(isset($request->page_num)){
 			session(['target_page_for_pager'=>$request->page_num]);
 		}
 		$header="";$slot="";
 		$key="";
-		$Contracts="";
-		if(Auth::user()->serial_staff=="S_0001"){
-			if($UserSerial=="all"){
-				$userinf="";
-				$Contracts=Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->paginate(initConsts::DdisplayLineNumContractList());
-				$GoBackPlace="/ShowMenuCustomerManagement/";
-			}else{
-				$GoBackPlace="/customers/UserList";			
-				$userinf=User::where('serial_user','=',$UserSerial)->first();
-				$Contracts=Contract::where('contracts.serial_user','=',$UserSerial)
-					->leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')
-					->select('contracts.*', 'users.*')
-					->paginate(InitConsts::DdisplayLineNumContractList());
-			}
-			return view('customers.ListContract',compact("Contracts","UserSerial","userinf","GoBackPlace","header","slot"));
-
+		//$Contracts="";
+		//$htm_branch_rdo=OtherFunc::make_html_branch_rdo();
+		if(session('targetUserSerial')=="all"){
+			//$userinf="";
+			//$Contracts=Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->paginate(initConsts::DdisplayLineNumContractList());
+			$GoBackPlace="/ShowMenuCustomerManagement/";
 		}else{
-			if($UserSerial=="all"){
-				$userinf="";
-				$Contracts=Contract::leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')->paginate(initConsts::DdisplayLineNumContractList());
-			
-				$GoBackPlace="/ShowMenuCustomerManagement/";
-			}else{
-				$GoBackPlace="/customers/UserList";
-				$userinf=User::where('serial_user','=',$UserSerial)->first();
-				$Contracts=Contract::where('contracts.serial_user','=',$UserSerial)
-					->leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')
-					->select('contracts.*', 'users.*')
-					->paginate(initConsts::DdisplayLineNumContractList());
-			}
-			return view('customers.ListContract',compact("Contracts","UserSerial","userinf","GoBackPlace","header","slot"));
+			$GoBackPlace="/customers/UserList";
+			//$userinf=User::where('serial_user','=',$UserSerial)->first();
+			/*
+			$Contracts=Contract::where('contracts.serial_user','=',$UserSerial)
+				->leftjoin('users', 'contracts.serial_user', '=', 'users.serial_user')
+				->select('contracts.*', 'users.*')
+				->paginate(initConsts::DdisplayLineNumContractList());
+			*/
 		}
+		//return view('customers.ListContract',compact("Contracts","UserSerial","userinf","GoBackPlace","header","slot"));
+		return view('customers.ListContract',compact("GoBackPlace","header","slot"));
 	}
 
 	public function ShowSyuseiCustomer(Request $request){
@@ -716,6 +770,9 @@ class StaffController extends Controller
 	}
 
 	public function ShowUserList(){
+		if(isset($_SERVER['HTTP_REFERER'])){
+			OtherFunc::set_access_history($_SERVER['HTTP_REFERER']);
+		}
 		$users=User::orderBy('created_at')->paginate(15);
 		return view('staff.UserList',compact('users'));
 	}

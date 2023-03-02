@@ -14,13 +14,15 @@
 		<div class="row justify-content-center">
 			<div class="col-md-12">
 				<div class="card" align="center">
-				<button class="btn btn-primary" type="button" onclick="location.href='../ShowMenuCustomerManagement'">メニューに戻る</button><br>
+					<div class="row justify-content-center">
+						<div class="col-auto"><button class="btn btn-primary" type="button" onclick="location.href='../ShowMenuCustomerManagement'">メニューに戻る</button></div>
 				@if($from_place=="monthly_rep")
 					<form method="POST" action="/staff/MonthlyRep">@csrf
 						<input name="year_month_day" type="hidden" value="{{$today}}"/>
-						<button type="submit" name="target_date" class="btn btn-primary">月報に戻る</button>
+						<div class="col-auto"><button type="submit" name="target_date" class="btn btn-primary">月報に戻る</button></div>
 					</form>
 				@endif
+					</div>
 					<div class="font-semibold text-2xl text-slate-600">[日報]</div>
 					<div class="card-header">
 						<form action="/workers/ShowDailyReport" method="POST" name="getTargetDate_fm" id="getTargetDate_fm">@csrf
@@ -163,14 +165,14 @@
 				{{--{!!$users->appends(request()->query())->links('pagination::bootstrap-4')!!}--}}
 				{{ $PaymentHistories->links() }}
 				施術小計：{{$subtotal_treatment}}
-				<br>
-				・物品販売
-				<form method="GET" action="/worker/ShowInputSalesGoods/new">@csrf
+				<span style="display: none">
+					・物品販売
+					<form method="GET" action="/worker/ShowInputSalesGoods/new">@csrf
 						<p style="text-indent:20px" class="py-1.5">
-						<button class="bg-blue-500 text-white rounded px-3 py-1" type="submit" name="CustomerListCreateBtn" value="CustomerList">新規物品売上登録</button>
+						<button class="btn btn-primary" type="submit" name="CustomerListCreateBtn" value="CustomerList">新規物品売上登録</button>
 						</p>
 					</form>	
-				<table class="table-auto" border-solid>
+					<table class="table-auto" border-solid>
 						<thead>
 							<tr>
 								<th class="border px-4 py-2">氏名<br>修正
@@ -217,7 +219,7 @@
 									</th>
 							</tr>
 						</thead>
-					<tbody>
+						<tbody>
 						@foreach ($SalesRecords as $SalesRecord)
 							<tr>
 								<td class="border px-4 py-2">
@@ -236,11 +238,11 @@
 								</form></td>
 							</tr>
 						@endforeach
-						
-					</tbody>
-				</table>
-{{ $SalesRecords->links() }}
-物品小計：{{$subtotal_good}}
+						</tbody>
+					</table>
+					{{ $SalesRecords->links() }}
+					物品小計：{{$subtotal_good}}
+				</span>
 					</div>
 				</div>
 			</div>

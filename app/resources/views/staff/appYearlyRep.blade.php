@@ -13,7 +13,11 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('/css/main.css')  }}" >
+    <!-- Scripts -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="{{  asset('/js/YearlyReport.js') }}" defer></script>
+    <!-- Styles -->
     <style>
         input[type=radio] {
             display: none; /* ラジオボタンを非表示にする */
@@ -29,8 +33,9 @@
             display: block; /* ブロックレベル要素化する */
             float: left; /* 要素の左寄せ・回り込を指定する */
             margin: 5px; /* ボックス外側の余白を指定する */
-            width: 200px; /* ボックスの横幅を指定する */
-            height: 45px; /* ボックスの高さを指定する */
+            width: 120px; /* ボックスの横幅を指定する */
+            height: 35px; /* ボックスの高さを指定する */
+            /*padding-top: -50px;*/
             padding-left: 5px; /* ボックス内左側の余白を指定する */
             padding-right: 5px; /* ボックス内御右側の余白を指定する */
             color: #b20000; /* フォントの色を指定 */
@@ -39,14 +44,10 @@
             cursor: pointer; /* マウスカーソルの形（リンクカーソル）を指定する */
             border: 2px solid #006DD9;/* ボックスの境界線を実線で指定する */
             border-radius: 5px; /* 角丸を指定する */
-            font-size: larger;
+            /*font-size: larger;*/
             vertical-align:middle;
         }
     </style>
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    {{--@vite(['resources/css/app.css', 'resources/js/app.js'])--}}
     @livewireStyles
 </head>
 <body>
@@ -59,23 +60,25 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto"></ul>
+                    <ul class="navbar-nav me-auto">
+
+                    </ul>
+
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="nav-link" href="{{ url('staff/login') }}">{{ __('Login') }}</a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ url('staff/register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
                         @else
@@ -91,7 +94,7 @@
                                         {{ __('Logout') }}
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('staff.logout') }}" method="POST" class="d-none">
+                                    <form id="logout-form" action="{{ url('staff/logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
                                 </div>
@@ -103,7 +106,9 @@
         </nav>
 
         <main class="py-4">
+            <livewire:yearly-report>
             @yield('content')
+
         </main>
     </div>
     @livewireScripts
