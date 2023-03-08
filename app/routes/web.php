@@ -81,7 +81,7 @@ Route::group(['middleware' => ['auth:staff']], function(){
     Route::get('/customers/ShowCustomersList_livewire_from_top_menu/{target_user_serial}', [\App\Http\Livewire\CustomerSearch::class,'search_from_top_menu'],function($target_user_serial){});
 	Route::post('/customers/ShowCustomersList_livewire_from_top_menu', CustomerSearch::class,function(Request $request){});
 
-     Route::get('/customers/UserList', function () {
+    Route::get('/customers/UserList', function () {
         return view('staff.UserList');
     });
     Route::post('/customers/UserList', function () {

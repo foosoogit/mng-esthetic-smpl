@@ -33,7 +33,7 @@
             display: block; /* ブロックレベル要素化する */
             float: left; /* 要素の左寄せ・回り込を指定する */
             margin: 5px; /* ボックス外側の余白を指定する */
-            width: 120px; /* ボックスの横幅を指定する */
+            width: 150px; /* ボックスの横幅を指定する */
             height: 35px; /* ボックスの高さを指定する */
             /*padding-top: -50px;*/
             padding-left: 5px; /* ボックス内左側の余白を指定する */
@@ -44,7 +44,7 @@
             cursor: pointer; /* マウスカーソルの形（リンクカーソル）を指定する */
             border: 2px solid #006DD9;/* ボックスの境界線を実線で指定する */
             border-radius: 5px; /* 角丸を指定する */
-            /*font-size: larger;*/
+            font-size: middle;
             vertical-align:middle;
         }
     </style>

@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('keiyaku_naiyo')->nullable()->comment('契約内容');
             
             $table->string('keiyaku_num',20)->nullable()->comment('回数');
-            $table->string('unit_price',8)->nullable()->comment('単価');
-            $table->string('price',8)->nullable()->comment('料金');
+            $table->string('unit_price',15)->nullable()->comment('単価');
+            $table->string('price',15)->nullable()->comment('料金');
             
             $table->text('remarks')->nullable()->comment('備考');
         });

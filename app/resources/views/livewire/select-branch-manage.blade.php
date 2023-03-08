@@ -1,8 +1,5 @@
 <div>
-    {{-- Nothing in the world is as soft and yielding as water. --}}
     {!!$htm_branch_cbox!!}
-    {{ $T }}
-    {{--<input type="hidden" name="target_branch">--}}
     <br>
     <form method="GET" action="/customers/UserList">@csrf
         <button class="btn btn-primary" type="submit" >顧客一覧</button>&nbsp;修正・新規登録・契約
