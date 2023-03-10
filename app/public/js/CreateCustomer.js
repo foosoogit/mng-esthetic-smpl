@@ -27,9 +27,19 @@ function validate(){
 	var name_mei_kana=document.getElementById("name_mei_kana").value;
 	
 	var GenderRdo=document.getElementsByName("GenderRdo");
+	var BranchRdo=document.getElementsByName("branch_rdo");
 	var PhoneCnt=0;
 	var NameCnt=0;
 	//alert($('#AdmissionDate').val());
+
+	strBrch="";
+	for (let i = 0; i < BranchRdo.length; i++) {
+		if (BranchRdo[i].checked) {
+			strBrch = BranchRdo[i].value;
+			break;
+		}
+	}
+
 	strGndr="";
 	for (let i = 0; i < GenderRdo.length; i++) {
 		if (GenderRdo[i].checked) {
@@ -38,7 +48,10 @@ function validate(){
 		}
 	}
 
-	if(name_sei==""){
+	if(strBrch==""){
+		alert("「店舗」を選択してください。");
+		return false;
+	}else if(name_sei==""){
 		alert("「姓」を入力してください。");
 		return false;
 	}else if(name_mei==""){

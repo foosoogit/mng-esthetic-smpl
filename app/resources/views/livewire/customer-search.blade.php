@@ -24,8 +24,7 @@
 					</div>
 					<div class="card-header">
 						<h3>顧客一覧</h3>
-					</div>
-					
+					</div>					
 					<div class="row justify-content-center align-middle">
 						<div class="col-auto">{!!$htm_branch_cbox!!}</div>
 						<div class="col-auto"><button type="button" wire:click="searchClear() onclick="document.getElementById('kensakukey_txt').value=''">解除</button></div> 
@@ -37,26 +36,26 @@
 						<thead>
 							<tr>
 								<th class="border px-4 py-2">顧客データ修正<br>
-									<button type="button" wire:click="sort('serial_user-ASC')"><img src="{{ asset('storage/images/sort_A_Z.png') }}" width="15px" /></button>
-									<button type="button" wire:click="sort('serial_user-Desc')"><img src="{{ asset('storage/images/sort_Z_A.png') }}" width="15px" /></button></th>
+									<button type="button" class="btn-orderby-border" wire:click="sort('serial_user-ASC')"><img src="{{ asset('storage/images/sort_A_Z.png') }}" width="15px" /></button>
+									<button type="button" class="btn-orderby-border" wire:click="sort('serial_user-Desc')"><img src="{{ asset('storage/images/sort_Z_A.png') }}" width="15px" /></button></th>
 								<th class="border px-4 py-2">契約</th>
 								<th class="border px-4 py-2">氏名(カルテ)
-									<button type="button" wire:click="sort('name_sei-ASC')"> <img src="{{ asset('storage/images/sort_A_Z.png') }}" width="15px" /></button>
-									<button type="button" wire:click="sort('name_sei-Desc')"> <img src="{{ asset('storage/images/sort_Z_A.png') }}" width="15px" /></button></th>
+									<button type="button" class="btn-orderby-border" wire:click="sort('name_sei-ASC')"> <img src="{{ asset('storage/images/sort_A_Z.png') }}" width="15px" /></button>
+									<button type="button" class="btn-orderby-border" wire:click="sort('name_sei-Desc')"> <img src="{{ asset('storage/images/sort_Z_A.png') }}" width="15px" /></button></th>
 								<th class="border px-4 py-2">しめい
-									<button type="button" wire:click="sort('name_sei_kana-ASC')"> <img src="{{ asset('storage/images/sort_A_Z.png') }}" width="15px" /></button>
-									<button type="button" wire:click="sort('name_sei_kana-Desc')"> <img src="{{ asset('storage/images/sort_Z_A.png') }}" width="15px" /></button></th>
+									<button type="button" class="btn-orderby-border" wire:click="sort('name_sei_kana-ASC')"> <img src="{{ asset('storage/images/sort_A_Z.png') }}" width="15px" /></button>
+									<button type="button" class="btn-orderby-border" wire:click="sort('name_sei_kana-Desc')"> <img src="{{ asset('storage/images/sort_Z_A.png') }}" width="15px" /></button></th>
 								<th class="border px-4 py-2">残金
-									<button type="button" wire:click="sort('zankin-ASC')"> <img src="{{ asset('storage/images/sort_A_Z.png') }}" width="15px" /></button>
-									<button type="button" wire:click="sort('zankin-Desc')"> <img src="{{ asset('storage/images/sort_Z_A.png') }}" width="15px" /></button>
-									<br>(合計:<button type="button" name="zankinBtn" id="zankinBtn" wire:click="zankin_search()">{{number_format($totalZankin)}}</button>円)
+									<button type="button" class="btn-orderby-border" wire:click="sort('zankin-ASC')"> <img src="{{ asset('storage/images/sort_A_Z.png') }}" width="15px" /></button>
+									<button type="button" class="btn-orderby-border" wire:click="sort('zankin-Desc')"> <img src="{{ asset('storage/images/sort_Z_A.png') }}" width="15px" /></button>
+									<br>(合計:<button type="button" class="btn-orderby-border" name="zankinBtn" id="zankinBtn" wire:click="zankin_search()">{{number_format($totalZankin)}}</button>円)
 								</th>
 								<th class="border px-4 py-2">生年月日
-									<button type="button" wire:click="sort('birth_year-ASC')"> <img src="{{ asset('storage/images/sort_A_Z.png') }}" width="15px" /></button>
-									<button type="button" wire:click="sort('birth_year-Desc')"> <img src="{{ asset('storage/images/sort_Z_A.png') }}" width="15px" /></button></th>
+									<button type="button" class="btn-orderby-border" wire:click="sort('birth_year-ASC')"> <img src="{{ asset('storage/images/sort_A_Z.png') }}" width="15px" /></button>
+									<button type="button" class="btn-orderby-border" wire:click="sort('birth_year-Desc')"> <img src="{{ asset('storage/images/sort_Z_A.png') }}" width="15px" /></button></th>
 								<th class="border px-4 py-2">電話番号
-									<button type="button" wire:click="sort('phone-ASC')"> <img src="{{ asset('storage/images/sort_A_Z.png') }}" width="15px" /></button>
-									<button type="button" wire:click="sort('phone-Desc')"> <img src="{{ asset('storage/images/sort_Z_A.png') }}" width="15px" /></button></th>
+									<button type="button" class="btn-orderby-border" wire:click="sort('phone-ASC')"> <img src="{{ asset('storage/images/sort_A_Z.png') }}" width="15px" /></button>
+									<button type="button" class="btn-orderby-border" wire:click="sort('phone-Desc')"> <img src="{{ asset('storage/images/sort_Z_A.png') }}" width="15px" /></button></th>
 								<th class="border px-4 py-2">削除</th>
 							</tr>
 						</thead>
